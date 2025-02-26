@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +9,12 @@ public class MusicStore {
 //  Your code will need to read each item from the albums file, construct each album’s file name, 
 //	and then read in the album information.
 //  format: <album title>_<artist>.txt 
+	
+	// stores the album title, and the actual album object for quick access 
+	ArrayList<Album> albums = new ArrayList<>();
+	ArrayList<Song> songs = new ArrayList<>();
+	
+	
 	
 	public static List<String> ConstructAlbumFiles () throws IOException {
 		
@@ -31,31 +36,40 @@ public class MusicStore {
 			String albumFileName = album + "_" + artist + ".txt";
 			fileNames.add(albumFileName);
 		}
+		albums.close();
 		return fileNames;
-			// need to read in file using constructed name, and store 
-			// (Album Title, Artist, Genre, Year) data from line 1, then 
-			// store all songs from album in order
-			
-			// thinking should make album and song classes before we write this,
-			// to construct those objects with the attributes here 
-			// and then store them in this classe's data structures	
 	}
 	
-	public void readAlbumInfo () throws IOException{
-		List<String> fileNames = ConstructAlbumFiles ();
+	public void readInAlbumInfo () throws IOException {
+		List<String> fileNames = ConstructAlbumFiles();
 		for (String fileName : fileNames) {
 			FileReader file = new FileReader(fileName); // 
 			BufferedReader albums = new BufferedReader(file); // open a specific album file 
 			
 			String[] albumHeader = albums.readLine().split(",");
-			// construct album object using the header info from line 1
+			// (Album Title, Artist, Genre, Year) data from line 1
 			Album album = new Album(albumHeader[0], albumHeader[1], albumHeader[2], albumHeader[3]);
+			this.albums.add(album); // add album to store
 			
-			// NEED TO READ IN SONGSIN ORDER, create song objects, AND STORE IN ALBUM
+			// READ IN SONGS IN ORDER AND STORE IN ALBUM
+			while (true) {
+				
+				String songName = albums.readLine(); // advances one line
+				if (songName == null) break; // end of song list file 
+				album.addSong(songName);  // add the song to the album's collection of songs in the list
+				songs.add(new Song(songName)); // add song to music store
 		}
 	}
+}
 	
-	public static void main (String[] args) throws IOException{
+	public ArrayList<Song> getSongs () {
+		return new ArrayList<Song>(songs); // copy list to avoid reference
+	}
+	// print title, artist and album its on for song 
+	// for album, print album info and songs in order
+	// not in database, print message indicating that its not there
+	
+	public static void main (String[] args) throws IOException {
 		
 	}
 }
