@@ -9,4 +9,20 @@ public class Playlist {
 	public Playlist() {
 		
 	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public ArrayList<Song> getSongs() {
+		return new ArrayList<Song>(playlist);
+	}
+	
+	public String toString() {
+		String songs = "Songs: ";
+		for (Song song : playlist) {
+			songs += song.getTitle() + " by " + song.getArtist() + "\n";
+		}
+		return songs;
+	}
 }
