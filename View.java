@@ -7,9 +7,9 @@ search for information from the music store
 
 
 the expected results of searching 
-● for a song that is in the database: print the song title, the artist, and the album it’s on 
-● for an album: print the album information and a list of the songs in the appropriate order 
-● for anything that is not in the database: a message indicating that the item is not there 
+● for a song that is in the database: print the song title, the artist, and the album it’s on  -----------------------
+● for an album: print the album information and a list of the songs in the appropriate order --------------------------
+● for anything that is not in the database: a message indicating that the item is not there  ----------------------------
 ● for anything that has multiple results: print all the results 
 
 
