@@ -1,3 +1,4 @@
+
 public class Song {
 	
 	private String title;
@@ -24,6 +25,11 @@ public class Song {
 		return artist;
 	}
 	
+	public String toString() {
+		
+		return "Title: " + title + 
+				"\nArtist: " + artist;
+	}
+	
 
 }
-
