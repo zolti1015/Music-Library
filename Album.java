@@ -4,10 +4,10 @@ import java.util.ArrayList;
 public class Album {
 
 	private ArrayList<Song> songs;
-	private String title;
-	private String artist;
-	private String genre;
-	private String year;
+	private final String title;
+	private final String artist;
+	private final String genre;
+	private final String year;
 	
 	public Album (String title, String artist, String genre, String year) {
 		this.title = title;
