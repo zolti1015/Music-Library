@@ -6,16 +6,13 @@ import java.util.List;
 
 public class MusicStore {
 	
-//  Your code will need to read each item from the albums file, construct each album’s file name, 
-//	and then read in the album information.
-//  format: <album title>_<artist>.txt 
-	
-	// stores the album title, and the actual album object for quick access 
 	ArrayList<Album> albums = new ArrayList<>();
 	ArrayList<Song> songs = new ArrayList<>();
 	
 	
-	
+	/*
+	 * Constructs all file names and return a list of them
+	 */
 	public static List<String> ConstructAlbumFiles () throws IOException {
 		
 		FileReader file = new FileReader("albums.txt"); // format for each line: album title, artist
@@ -65,9 +62,10 @@ public class MusicStore {
 	public ArrayList<Song> getSongs () {
 		return new ArrayList<Song>(songs); // copy list to avoid reference
 	}
-	// print title, artist and album its on for song 
-	// for album, print album info and songs in order
-	// not in database, print message indicating that its not there
+	
+	public ArrayList<Album> getAlbums () {
+		return new ArrayList<Album>(albums); // copy list to avoid reference
+	}
 	
 	public static void main (String[] args) throws IOException {
 		
