@@ -1,47 +1,3 @@
-/*
-search for information from the music store 
-● for a song by title ------------------------------------------
-● for a song by artist -------------------------------------------
-● for an album by title ------------------------------------------
-● for an album by artist ----------------------------------------
-
-
-the expected results of searching 
-● for a song that is in the database: print the song title, the artist, and the album it’s on  -----------------------
-● for an album: print the album information and a list of the songs in the appropriate order --------------------------
-● for anything that is not in the database: a message indicating that the item is not there  ----------------------------
-● for anything that has multiple results: print all the results  -----------------------------------------------------------
-
-
-search for information from the user library 
-● should cover all the search cases listed for the music store  -------------------------------------
-● should also be able to search for a playlist by name – the result should print the songs 
-(title and artist)  -------------------------------------------------------------------------------------
-
- 
-add something to the library 
-● add a song to the library (as long as it is in the store) ----------------------------------------
-● add a whole album to the library (as long as it is in the store) ----------------------------------------
-
-rate a song  
-● the ratings are 1 to 5 ------------------------------------------------
-● songs do not have to be rated so there is no default rating ---------------------------------
-● songs that are rated as 5 should automatically be set to “favorite” ---------------------------------
-
-get a list of items from the library -----------------------------------------------------------------------
-● a list of song titles (any order) ---------------------------------------------------------------
-● a list of artists (any order) ---------------------------------------------------------------
-● a list of albums (any order) ---------------------------------------------------------------
-● a list of playlists (any order) ---------------------------------------------------------------
-● a list of “favorite” songs ---------------------------------------------------------------
-
-mark a song as “favorite” -----------------------------------------------------------------------
-
-create a playlist and add/remove songs -------------------------------------
-● playlists should have a name ---------------------------------------------------
-● songs should be maintained in the order they are added -----------------------------------
-
- */
 import java.util.Scanner;
 
 public class View {
@@ -53,7 +9,7 @@ public class View {
 	private LibraryModel library;
 	private Scanner scanner;
 
-	public class view(LibraryModel library) {
+	public View(LibraryModel library) {
 		this.library = library;
 		this.scanner = new Scanner(System.in);
 	}
@@ -61,43 +17,77 @@ public class View {
 	// Start the UI loop
 	public void start() {
 		while (true) {
-			system.out.println("\nMusic Library Menu:");
-			system.out.println("\n1. View Songs");
-			system.out.println("\n2. View Albums");
-			system.out.println("\n3. View Playlists");
-			system.out.println("\n4. Add a Song");
-			system.out.println("\n5. Quit");
-			system.out.println("\nEnter your choice: ");
+			System.out.println("\nMusic Library Menu:");
+			System.out.println("\n1. View Songs");
+			System.out.println("\n2. View Albums");
+			System.out.println("\n3. View Playlists");
+			System.out.println("\n4. View Artists");
+			System.out.println("\n5. View Favorites");
+			System.out.println("\n6. Add a Song or Album to my Library");
+			System.out.println("\n7. Search for song or album in music store");
+			System.out.println("\n8. Search for song or album in my library");
+			System.out.println("\n9. Search for playlist");
+			System.out.println("\n10. Rate or mark song as favorite");
+			System.out.println("\n11. Create/modify playlist");
+			System.out.println("\n12. Quit");
+			System.out.println("\nEnter your choice: ");
 
+			
 			String choice = scanner.nextLine();
 			switch (choice) {
-				case "1":
-					displaySongs();
-					break;
+				case "1": 
+					library.listOfItems("Songs"); break;
 				case "2":
-					displayAlbums();
-					break;
+					library.listOfItems("Albums"); break;
 				case "3":
-					displayPlaylists();
-					break;
+					library.listOfItems("Playlists"); break;
 				case "4":
-					addSong();
-					break
-				
+					library.listOfItems("Artists"); break;
+				case "5":
+					library.listOfItems("Favorites"); break;
+				case "6":
+					System.out.println("Song or album? : "); 
+					String selection = scanner.nextLine();
+					if(selection.toLowerCase().equals("song")) {
+						System.out.println("Type song name: ");
+						String name = scanner.nextLine();
+						library.addSongToLibrary(name); break; }
+					else { 
+						System.out.println("Type album name: ");
+						String name = scanner.nextLine();
+						library.addAlbumToLibrary(name); break; }
+				case "7":
+					System.out.println("Enter the type ('Song'/'Album') and the name of a title or an artist");
+					String entry = scanner.nextLine();
+					String[] selections = entry.split(" ");
+					if(selections[0].toLowerCase().equals("song")) library.getStore().getSongInfo(selections[1]);
+					else library.getStore().getAlbumInfo(selections[1]); 
+					break;
+				case "8":
+					System.out.println("Enter the type ('Song'/'Album') and the name of a title or an artist");
+					String entry2 = scanner.nextLine();
+					String[] selections2 = entry2.split(" ");
+					if(selections2[0].toLowerCase().equals("song")) library.getSongInfo(selections2[1]);
+					else library.getAlbumInfo(selections2[1]); 
+					break;
+				case "9":
+					System.out.println("Enter the name of playlist: ");
+					String entry3 = scanner.nextLine();
+					library.searchForPlaylist(entry3);
+					break;
+				// rate or mark song as favorite
+				case "10":
+					
+					
+				// create/add or remove from playlist
+				case "11":
+					
+				case "12":
+					System.exit(0);
+				default:
+					System.out.println("Invalid selection. Please Reselect.");
+					continue;
 			}
 		}
 	}
-
-	private void displaySongs() {
-		
-	}
-
-	private void displayAlbums() {
-		
-	}
-
-	private void displayPlaylists() {
-		
-	}
 }
-
