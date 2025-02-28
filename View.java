@@ -70,8 +70,6 @@ public class View {
         System.out.println("6. Search for song by artist in library");
         System.out.println("7. Search for album by title in library");
         System.out.println("8. Search for album by artist in library");
-        
-        System.out.println("9. Search for playlist by name");
     }
     
     
@@ -158,11 +156,6 @@ public class View {
                     String artist4 = scanner.nextLine();
                     System.out.println(model.getSongInfo(artist4));
                     break;
-                case 9: 
-                	System.out.println("Enter playlist name: ");
-                    String playlist = scanner.nextLine();
-                	model.searchForPlaylist(playlist);
-                	break;
             }
         }
     }
@@ -170,6 +163,11 @@ public class View {
     public void displayWelcomeMessage() {
     	System.out.println("Welcome to your library.");
     }
+    
+    public void displayGoodbyeMessage() {
+    	System.out.println("Goodbye");
+    }
+    
     
     public void handleAddMenu() {
     	
@@ -188,8 +186,7 @@ public class View {
                 model.addAlbumToLibrary(album);
                 break;
     }
-    
-    }
+}
     
    public void handleListMenu() {
 	   displayListMenu();
@@ -197,18 +194,56 @@ public class View {
        int choice = scanner.nextInt();
 	   switch (choice) {
 	   
-		case 1: 
+	   case 1: 
 			System.out.println(model.listOfItems("Songs")); break;
-		case 2:
+	   case 2:
 			System.out.println(model.listOfItems("Albums")); break;
-		case 3:
+	   case 3:
 			System.out.println(model.listOfItems("Playlists")); break;
-		case 4:
+	   case 4:
 			System.out.println(model.listOfItems("Artists")); break;
-		case 5:
+	   case 5:
 			System.out.println(model.listOfItems("Favorites")); break;
    }
 }
+   
+   
+   public void handlePlaylistMenu() {
+	   displayPlaylistMenu();
+	   System.out.println("Enter your choice: ");
+       int choice = scanner.nextInt();
+       
+       switch (choice) {
+	   
+	   case 1: 
+		   System.out.println("What would you like to name your playlist?");
+           String name = scanner.nextLine();
+           model.createNewPlaylist(name);
+           break;
+	   case 2:
+		   System.out.println("Name of song you want to add?");
+           String name2 = scanner.nextLine();
+		   model.addSongToPlaylist(name2);
+		   break;
+		   
+	   // remove song from playlist
+	   case 3:
+			
+	   
+	   case 4:
+		   System.out.println("Enter playlist name: ");
+           String playlist = scanner.nextLine();
+       	   System.out.println(model.searchForPlaylist(playlist));
+       	   break;
+	   case 0:
+			return;
+   }
+	   
+   }
+   
+   public void handleSongActionsMenu() {
+	   
+   }
    
    
 }
