@@ -15,6 +15,7 @@ public class View {
 
 
     public void run() {
+        displayWelcomeMessage();
         
         while (true) {
             displayMainMenu();
@@ -43,8 +44,6 @@ public class View {
                     break;
             }
         }
-        
-        displayGoodbyeMessage();
     }
 
     private void displayMainMenu() {
@@ -155,6 +154,8 @@ public class View {
                     String artist4 = scanner.nextLine();
                     System.out.println(model.getSongInfo(artist4));
                     break;
+                default: 
+              	  	System.out.println("Invalid input"); 
             }
         }
     }
@@ -163,13 +164,9 @@ public class View {
     	System.out.println("Welcome to your library.");
     }
     
-    public void displayGoodbyeMessage() {
-    	System.out.println("Goodbye");
-    }
-    
     
     public void handleAddMenu() {
-    	
+    	while (true) {
     	displayAddMenu();
     	System.out.println("Enter your choice: ");
         int choice = scanner.nextInt();
@@ -184,10 +181,15 @@ public class View {
                 String album = scanner.nextLine();
                 model.addAlbumToLibrary(album);
                 break;
+        	default: 
+           	  	System.out.println("Invalid input"); 
     }
 }
+    }
     
    public void handleListMenu() {
+	   
+	   while (true) {
 	   displayListMenu();
 	   System.out.println("Enter your choice: ");
        int choice = scanner.nextInt();
@@ -203,11 +205,16 @@ public class View {
 			System.out.println(model.listOfItems("Artists")); break;
 	   case 5:
 			System.out.println(model.listOfItems("Favorites")); break;
+	   default: 
+     	  System.out.println("Invalid input"); 
    }
 }
+   }
    
    
    public void handlePlaylistMenu() {
+	   
+	   while (true) {
 	   displayPlaylistMenu();
 	   System.out.println("Enter your choice: ");
        int choice = scanner.nextInt();
@@ -222,13 +229,19 @@ public class View {
 	   case 2:
 		   System.out.println("Name of song you want to add?");
            String name2 = scanner.nextLine();
-		   model.addSongToPlaylist(name2);
+           
+           System.out.println("Name of playlist you want to add to?");
+           String name3 = scanner.nextLine();
+		   model.addSongToPlaylist(name3, name2);
 		   break;
-		   
-	   // remove song from playlist
 	   case 3:
-			
-	   
+		   System.out.println("Name of song you want to remove?");
+           String name4 = scanner.nextLine();
+           
+           System.out.println("Name of playlist you want to remove it from?");
+           String name5 = scanner.nextLine();
+           model.removeSongFromPlaylist(name5, name4);
+           break;
 	   case 4:
 		   System.out.println("Enter playlist name: ");
            String playlist = scanner.nextLine();
@@ -236,13 +249,40 @@ public class View {
        	   break;
 	   case 0:
 			return;
+	   default: 
+     	  System.out.println("Invalid input"); 
+       }
    }
-	   
-   }
+   	}
    
    public void handleSongActionsMenu() {
 	   
+	   while (true) {
+	   displaySongActionsMenu();
+	   System.out.println("Enter your choice: ");
+       int choice = scanner.nextInt();
+       
+       switch (choice) {
+           case 0: 
+        	   return;
+           case 1:
+        	   System.out.println("Name of song you want to mark as favorite?");
+               String name = scanner.nextLine();
+        	   model.markSongAsFavorite(name);
+        	   break;
+           case 2: 
+        	   System.out.println("Name of song you want to rate?");
+               String name2 = scanner.nextLine();
+               
+               System.out.println("Rating 1-5 you want to assign it?");
+               int rating = scanner.nextInt();
+               
+               model.rateSong(name2, rating);
+               break;
+          default: 
+        	  System.out.println("Invalid input"); 
+       }
    }
-   
+   }
    
 }
