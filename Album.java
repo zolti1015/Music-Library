@@ -40,7 +40,8 @@ public class Album {
 	public String getYear() {
 		return year;
 	}
-	
+
+	@Override
 	public String toString() {
 		String listOfSongs = "\nSongs on album: \n";
 		for (Song song : songs) {
