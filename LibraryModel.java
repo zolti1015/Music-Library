@@ -1,12 +1,14 @@
 import java.util.ArrayList;
 
 public class LibraryModel {
+	private ArrayList<Song> songs;
+	private ArrayList<Album> albums;
+	private ArrayList<Playlist> playlists;
 	
-	ArrayList<Album> albums = new ArrayList<>();
-	ArrayList<Song> songs = new ArrayList<>();
-	ArrayList<Playlist> playlists = new ArrayList<>();
-	
-	public LibraryModel () { }
+	public LibraryModel () {
+		this.songs = mew ArrayList<>();
+		this.albums = mew ArrayList<>();
+		this.playlists = mew ArrayList<>();
 	
 	   // get song info by title or artist
 		public String getSongInfo(String titleOrArtist) {
@@ -23,7 +25,7 @@ public class LibraryModel {
 			    }
 		    }
 		return "Searched for Data is not in the database."; // need thing not found message
-}
+		}
 		
 		// get album info and list of songs by title or Artist
 		public String getAlbumInfo(String titleOrArtist) {
@@ -52,8 +54,13 @@ public class LibraryModel {
 		public ArrayList<Album> getAlbums () {
 			return new ArrayList<Album>(albums); // copy list to avoid reference
 		}
+
+		public ArrayList<Playlist> getPlaylists() {
+			return new ArrayList<Playlist>(playlists); // copy list to avoid reference
+		}
+	
 		
 	//  keeps track of the user’s library 
 	// and interacts with other classes including the View and the MusicStore. 
-	
+	}
 }
