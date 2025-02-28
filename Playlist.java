@@ -6,8 +6,8 @@ public class Playlist {
 	private String name;
 	private ArrayList<Song> playlist;
 	
-	public Playlist() {
-		
+	public Playlist(String name) {
+		this.name = name;
 	}
 	
 	public String getName() {
