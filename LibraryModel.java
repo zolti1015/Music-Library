@@ -1,14 +1,20 @@
 import java.util.ArrayList;
+import java.io.IOException;
 
 public class LibraryModel {
+	
 	private ArrayList<Song> songs;
 	private ArrayList<Album> albums;
 	private ArrayList<Playlist> playlists;
 	
+	private final MusicStore store;
+	
 	public LibraryModel () {
-		this.songs = mew ArrayList<>();
-		this.albums = mew ArrayList<>();
-		this.playlists = mew ArrayList<>();
+		this.store = new MusicStore();
+		this.songs = new ArrayList<>();
+		this.albums = new ArrayList<>();
+		this.playlists = new ArrayList<>();
+	}
 	
 	   // get song info by title or artist
 		public String getSongInfo(String titleOrArtist) {
@@ -47,6 +53,22 @@ public class LibraryModel {
 				}
 			}
 		}
+		
+		public void addSongToLibrary(String songName) { 
+			// check if song in music store
+			if (store.isInStore(songName)) {
+				songs.add(new Song(songName));
+			}
+		}
+		
+		public void addAlbumToLibrary(String albumName) {
+			for (Album album : store.getAlbums()) {
+				if(album.getTitle().equals(albumName)) {
+					albums.add(album);
+				}
+			}
+		}
+		
 		public ArrayList<Song> getSongs () {
 			return new ArrayList<Song>(songs); // copy list to avoid reference
 		}
@@ -58,9 +80,44 @@ public class LibraryModel {
 		public ArrayList<Playlist> getPlaylists() {
 			return new ArrayList<Playlist>(playlists); // copy list to avoid reference
 		}
-	
 		
-	//  keeps track of the user’s library 
-	// and interacts with other classes including the View and the MusicStore. 
+		public MusicStore getStore() {
+			return store;
+		}
+		
+		/*
+		get a list of items from the library 
+		● a list of song titles (any order) 
+		● a list of artists (any order) 
+		● a list of albums (any order) 
+		● a list of playlists (any order) 
+		● a list of “favorite” songs 
+		*/
+		public String listOfItems(String command) {
+			String list = "";
+			switch(command.toLowerCase()) {
+				case "songs":
+					for (Song song : songs) {
+						list += song.toString(); }
+					break;
+				case "artists":
+					for (Song song : songs) {
+						list += song.getArtist() + "\n"; }
+					break;
+				case "albums": 
+					for (Album album : albums) {
+						list += album.getTitle() + "\n"; }
+					break;
+				case "playlists":
+					for (Playlist playlist : playlists) {
+						list += playlist.getName() + "\n"; }
+					break;
+				case "favorites":
+					for (Song song : songs) {
+						if(song.getFavStatus()) 
+							list += song.toString() + "\n"; }
+					break;
+			}
+			return list;
+		}
 	}
-}
