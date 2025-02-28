@@ -42,18 +42,62 @@ create a playlist and add/remove songs -------------------------------------
 ● songs should be maintained in the order they are added -----------------------------------
 
  */
+import java.util.Scanner;
+
 public class View {
 	// As indicated in Part 2, the view is simply the user interface, and its only purpose is to interact 
 	// with the user and communicate with the model. It should not be storing or manipulating any of 
 	// the data. It simply gets user requests and gets information from the model based on those 
 	// requests. 
-	
-	private final MusicStore musicstore = new MusicStore();
-	private final LibraryModel library = new LibraryModel();
-	
-	public static void main(String[] args) {
-			
+
+	private LibraryModel library;
+	private Scanner scanner;
+
+	public class view(LibraryModel library) {
+		this.library = library;
+		this.scanner = new Scanner(System.in);
 	}
-	
+
+	// Start the UI loop
+	public void start() {
+		while (true) {
+			system.out.println("\nMusic Library Menu:");
+			system.out.println("\n1. View Songs");
+			system.out.println("\n2. View Albums");
+			system.out.println("\n3. View Playlists");
+			system.out.println("\n4. Add a Song");
+			system.out.println("\n5. Quit");
+			system.out.println("\nEnter your choice: ");
+
+			String choice = scanner.nextLine();
+			switch (choice) {
+				case "1":
+					displaySongs();
+					break;
+				case "2":
+					displayAlbums();
+					break;
+				case "3":
+					displayPlaylists();
+					break;
+				case "4":
+					addSong();
+					break
+				
+			}
+		}
+	}
+
+	private void displaySongs() {
+		
+	}
+
+	private void displayAlbums() {
+		
+	}
+
+	private void displayPlaylists() {
+		
+	}
 }
 
