@@ -128,15 +128,43 @@ public class LibraryModel {
 		playlists.add(new Playlist(name));
 	}
 	
-	public void addSongToPlaylist(String name) {
+	public void addSongToPlaylist(String playlistName, String songName) {
 		 for (Playlist playlist : playlists) {
-			   if(playlist.getName().equals(name)) {
+			   if(playlist.getName().equals(playlistName)) {
 				   for (Song song : songs) {
-					   
+					   if(song.getTitle().equals(songName)) {
+						   playlist.addSong(songName);
+					   }
 				   }
 			   }
 		   }
 	}
 	
-	
+	public void removeSongFromPlaylist(String playlistName, String songName) {
+		for (Playlist playlist : playlists) {
+			   if(playlist.getName().equals(playlistName)) {
+				   for (Song song : songs) {
+					   if(song.getTitle().equals(songName)) {
+						   playlist.removeSong(songName);
+					   }
+}
+			   }
+		}
 	}
+	
+	public void markSongAsFavorite(String name) {
+		for (Song song : songs) {
+			if (song.getTitle().equals(name)) {
+				song.makeFavorite();
+			}
+		}
+	}
+	
+	public void rateSong(String name, int rating) {
+		for (Song song : songs) {
+			if (song.getTitle().equals(name)) {
+				song.rateSong(rating);
+			}
+		}
+	}
+}
