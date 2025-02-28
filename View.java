@@ -15,7 +15,6 @@ public class View {
 
 
     public void run() {
-        displayWelcomeMessage();
         
         while (true) {
             displayMainMenu();
