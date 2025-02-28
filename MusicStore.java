@@ -108,8 +108,4 @@ public class MusicStore {
 	public ArrayList<Album> getAlbums () {
 		return new ArrayList<Album>(albums); // copy list to avoid reference
 	}
-	
-	public static void main (String[] args) throws IOException {
-		
-	}
 }
