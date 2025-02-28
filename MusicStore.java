@@ -87,6 +87,19 @@ public class MusicStore {
 			return "Searched for Data is not in the database.";
 			}
 			
+		
+	public boolean isInStore(String songOrAlbumName) {
+		if(songs.contains(new Song(songOrAlbumName))) { 
+			return true;
+		}
+		for (Album album : albums) {
+			if (album.getTitle().equals(songOrAlbumName)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 	
 	public ArrayList<Song> getSongs () {
 		return new ArrayList<Song>(songs); // copy list to avoid reference
