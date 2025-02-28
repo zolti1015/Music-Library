@@ -1,13 +1,4 @@
-/*
 
-
-the expected results of searching 
-● for a song that is in the database: print the song title, the artist, and the album it’s on  -----------------------
-● for an album: print the album information and a list of the songs in the appropriate order --------------------------
-● for anything that is not in the database: a message indicating that the item is not there  ----------------------------
-● for anything that has multiple results: print all the results  -----------------------------------------------------------
-
- */
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,7 +8,7 @@ public class View {
     private Scanner scanner;
 
 
-    public view(LibraryModel model) {
+    public View(LibraryModel model) {
         this.model = model;
         this.scanner = new Scanner(System.in);
     }
@@ -28,7 +19,8 @@ public class View {
         
         while (true) {
             displayMainMenu();
-            int choice = getIntInput("Enter your choice: ", 0, 5);
+            System.out.println("Enter your choice: ");
+            int choice = scanner.nextInt();
             
             switch (choice) {
                 case 0:
@@ -67,26 +59,43 @@ public class View {
 
     private void displaySearchMenu() {
         System.out.println("\nSEARCH MENU");
+        System.out.println("0. Go back to main menu");
         System.out.println("1. Search for song by title in music store");
         System.out.println("2. Search for song by artist in music store");
         System.out.println("3. Search for album by title in music store");
+        System.out.println("4. Search for album by artist in music store");
+        
+        System.out.println("5. Search for song by title in library");
+        System.out.println("6. Search for song by artist in library");
+        System.out.println("7. Search for album by title in library");
+        System.out.println("8. Search for album by artist in library");
+        
+        System.out.println("9. Search for playlist by name");
     }
 
     private void handleSearchMenu() {
-        boolean back = false;
-        
-        while (!back) {
+    
+        while (true) {
             displaySearchMenu();
-            int choice = getIntInput("Enter your choice: ", 0, 9);
+            System.out.println("Enter your choice: ");
+            int choice = scanner.nextInt();
             
             switch (choice) {
                 case 0:
-                    back = true;
-                    break;
+                	return;
                 case 1:
-                    searchSongByTitleInStore();
+                    System.out.println("Enter title: ");
+                    String title = scanner.nextLine();
+                    System.out.println(model.getStore().getSongInfo(title));
+                    
                     break;
             }
         }
     }
+    
+    public void displayWelcomeMessage() {
+    	System.out.println("Welcome to your library.");
+    }
+    
+    
 }
