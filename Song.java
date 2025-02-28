@@ -1,7 +1,7 @@
 
 public class Song {
 	
-	private String title;
+	private final String title;
 	private String artist;
 	public enum Rating {ONE, TWO, THREE, FOUR, FIVE}
 	private Rating rating;
@@ -29,6 +29,21 @@ public class Song {
 		
 		return "Title: " + title + 
 				"\nArtist: " + artist;
+	}
+	
+	public void makeFavorite() {
+		this.favorite = true;
+	}
+	
+	public boolean getFavStatus() {
+		return this.favorite;
+	}
+	
+	public boolean equals(Song song) {
+		if (song.getTitle().equals(title) && song.getArtist().equals(artist)) {
+			return true;
+		}
+		return false;
 	}
 	
 
