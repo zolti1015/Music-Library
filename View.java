@@ -82,7 +82,12 @@ public class View {
 					break;
 				case "4":
 					addSong();
-					break
+					break;
+				case "5":
+					System.out.println("Exiting...Goodbye!");
+					return;
+				default:
+					System.out.println("Invalid option. Please try again.");
 				
 			}
 		}
