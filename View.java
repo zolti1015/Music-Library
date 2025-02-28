@@ -87,7 +87,41 @@ public class View {
                     System.out.println("Enter title: ");
                     String title = scanner.nextLine();
                     System.out.println(model.getStore().getSongInfo(title));
-                    
+                    break;
+                case 2: 
+                	 System.out.println("Enter artist: ");
+                     String artist = scanner.nextLine();
+                     System.out.println(model.getStore().getSongInfo(artist));
+                     break;
+                case 3:
+                	 System.out.println("Enter title: ");
+                     String title2 = scanner.nextLine();
+                     System.out.println(model.getStore().getSongInfo(title2));
+                     break;
+                case 4:
+               	 	System.out.println("Enter artist: ");
+                    String artist2 = scanner.nextLine();
+                    System.out.println(model.getStore().getSongInfo(artist2));
+                    break;
+                case 5:
+                    System.out.println("Enter title: ");
+                    String title3 = scanner.nextLine();
+                    System.out.println(model.getStore().getSongInfo(title3));
+                    break;
+                case 6: 
+                	 System.out.println("Enter artist: ");
+                     String artist3 = scanner.nextLine();
+                     System.out.println(model.getSongInfo(artist3));
+                     break;
+                case 7:
+                	 System.out.println("Enter title: ");
+                     String title4 = scanner.nextLine();
+                     System.out.println(model.getSongInfo(title4));
+                     break;
+                case 8:
+               	 	System.out.println("Enter artist: ");
+                    String artist4 = scanner.nextLine();
+                    System.out.println(model.getSongInfo(artist4));
                     break;
             }
         }
