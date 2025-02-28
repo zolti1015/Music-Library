@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.io.IOException;
 
+
 public class LibraryModel {
 	
 	private ArrayList<Song> songs;
@@ -9,8 +10,9 @@ public class LibraryModel {
 	
 	private final MusicStore store;
 	
-	public LibraryModel () {
+	public LibraryModel () throws IOException {
 		this.store = new MusicStore();
+		store.readInAlbumInfo(); // build music store to reference
 		this.songs = new ArrayList<>();
 		this.albums = new ArrayList<>();
 		this.playlists = new ArrayList<>();
@@ -46,12 +48,13 @@ public class LibraryModel {
 		
 		
 		// find playlist by provided name and print song details
-		public void searchForPlaylist(String playlistName) {
+		public String searchForPlaylist(String playlistName) {
 			for (Playlist playlist : playlists) {
 				if(playlist.getName().equals(playlistName)) {
-					System.out.println(playlist.toString());
+					return playlist.toString();
 				}
 			}
+		return "Playlist doesn't exist";
 		}
 		
 		public void addSongToLibrary(String songName) { 
@@ -83,10 +86,6 @@ public class LibraryModel {
 		
 		public MusicStore getStore() {
 			return store;
-		}
-
-		public String creatPlaylist(String name) {
-			playlists.add(new Playlist(name));
 		}
 		
 		/*
@@ -124,4 +123,20 @@ public class LibraryModel {
 			}
 			return list;
 		}
+		
+	public void createNewPlaylist(String name) {
+		playlists.add(new Playlist(name));
+	}
+	
+	public void addSongToPlaylist(String name) {
+		 for (Playlist playlist : playlists) {
+			   if(playlist.getName().equals(name)) {
+				   for (Song song : songs) {
+					   
+				   }
+			   }
+		   }
+	}
+	
+	
 	}
