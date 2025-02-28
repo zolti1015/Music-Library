@@ -11,12 +11,24 @@ public class Song {
 		this.title = title;
 	}
 	
-	public void rateSong(Rating rating) {
+	public void rateSong(int ratingOneToFive) {
+		Rating rating;
+		switch (ratingOneToFive) {
+			case 1: 
+				rating = Rating.ONE;
+			case 2: 
+				rating = Rating.TWO;
+			case 3: 
+				rating = Rating.THREE;
+			case 4: 
+				rating = Rating.FOUR;
+			case 5: 
+				rating = Rating.FIVE;
 		// 5 star rating makes song automatic favorite
 		if (rating == Rating.FIVE) favorite = true;
 		this.rating = rating;
+		}
 	}
-	
 	public String getTitle() {
 		return title;
 	}
