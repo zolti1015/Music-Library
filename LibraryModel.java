@@ -84,6 +84,10 @@ public class LibraryModel {
 		public MusicStore getStore() {
 			return store;
 		}
+
+		public String creatPlaylist(String name) {
+			playlists.add(new Playlist(name));
+		}
 		
 		/*
 		get a list of items from the library 
