@@ -62,23 +62,33 @@ public class MusicStore {
 	
 	// get song info by title or artist
 	public String getSongInfo(String titleOrArtist) {
-		String endInfo = "";
-		for (Album album : albums) 
-		{
-			for (Song song : album.getSongs())
-		    {
-				if (song.getArtist().equals(titleOrArtist) ||
-					song.getTitle().equals(titleOrArtist) ) 
-				{
-						endInfo += song.toString() +
-								"\nAlbum: " + album.getTitle();
+				String endInfo = "";
+				if (albums.isEmpty()) {
+				for (Song song : songs) {
+						if (song.getArtist().equals(titleOrArtist) ||
+							song.getTitle().equals(titleOrArtist) ) 
+						{
+								endInfo += song.toString();				    }
+				    }
 			    }
-		    }
-	    }
-	if (endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
-	endInfo += "\n";
-	return endInfo; 
-	}
+					else {
+						for (Album album : albums) {
+							for (Song song : album.getSongs())
+						    {
+								if (song.getArtist().equals(titleOrArtist) ||
+									song.getTitle().equals(titleOrArtist) ) 
+								{
+										endInfo += song.toString() +
+												"\nAlbum: " + album.getTitle();
+							    }
+						    }
+					    
+					}
+				}
+			if (endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
+			endInfo += "\n";
+			return endInfo; 
+			}
 	
 	// get album info and list of songs by title or Artist
 		public String getAlbumInfo(String titleOrArtist) {
@@ -94,20 +104,6 @@ public class MusicStore {
 				return endInfo; 
 			}
 			
-		
-	public boolean isInStore(String songOrAlbumName) {
-		for (Song song : songs) {
-			if(song.getTitle().equals(songOrAlbumName)) { 
-				return true;
-		}
-		for (Album album : albums) {
-			if (album.getTitle().equals(songOrAlbumName)) {
-				return true;
-			}
-		}
-	}
-	return false;
-	}
 	
 	public ArrayList<Song> getSongs () {
 		return new ArrayList<Song>(songs); // copy list to avoid reference
