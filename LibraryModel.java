@@ -21,7 +21,7 @@ public class LibraryModel {
 	   // get song info by title or artist
 		public String getSongInfo(String titleOrArtist) {
 			String endInfo = "";
-			for (Album album : store.getAlbums()) 
+			for (Album album : albums) 
 			{
 				for (Song song : album.getSongs())
 			    {
