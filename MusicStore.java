@@ -55,7 +55,7 @@ public class MusicStore {
 				if (songName == null) break; // end of song list file 
 				Song song = new Song(songName, albumHeader[1]);
 				album.addSong(song);  // add the song to the album's collection of songs in the list
-				songs.add(new Song(songName, albumHeader[1])); // add song to music store
+				songs.add(song); // add song to music store
 		}
 	}
 }
