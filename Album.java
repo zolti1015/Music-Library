@@ -14,11 +14,11 @@ public class Album {
 		this.artist = artist;
 		this.genre = genre;
 		this.year = year;
+		this.songs = new ArrayList<>();
 	}
 	
-	// string argument, prevents escaping references
-	public void addSong (String title) {
-		this.songs.add(new Song(title));
+	public void addSong (Song song) {
+		this.songs.add(song);
 	}
 	
 	public ArrayList<Song> getSongs() {
