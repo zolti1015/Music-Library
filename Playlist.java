@@ -7,6 +7,7 @@ public class Playlist {
 	private ArrayList<Song> playlist;
 	
 	public Playlist(String name) {
+		this.playlist = new ArrayList<Song>();
 		this.name = name;
 	}
 	
