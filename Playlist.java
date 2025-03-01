@@ -18,6 +18,17 @@ public class Playlist {
 		return new ArrayList<Song>(playlist);
 	}
 	
+	
+	public void addSong(String name, String Artist) {
+		playlist.add(new Song(name, Artist));
+	}
+	
+	public void removeSong(String name) {
+		for (Song song : playlist) {
+			if(song.getTitle().equals(name)) playlist.remove(song);
+		}
+	}
+	@Override
 	public String toString() {
 		String songs = "Songs: ";
 		for (Song song : playlist) {
