@@ -136,7 +136,7 @@ public class View {
                 case 5:
                      System.out.println("Enter title: ");
                      String title3 = scanner.nextLine();
-                     System.out.println(model.getStore().getSongInfo(title3));
+                     System.out.println(model.getSongInfo(title3));
                      break;
                 case 6: 
                 	 System.out.println("Enter artist: ");
@@ -172,6 +172,8 @@ public class View {
         scanner.nextLine(); // consume the leftover newline character
         
         switch (choice) {
+        	case 0: 
+        		return;
         	case 1: 
         		System.out.println("Enter song name: ");
                 String song = scanner.nextLine();
@@ -197,15 +199,17 @@ public class View {
        scanner.nextLine(); // consume the leftover newline character
        
 	   switch (choice) {
+	   case 0:
+		   return;
 	   
 	   case 1: 
 			System.out.println(model.listOfItems("Songs")); break;
 	   case 2:
-			System.out.println(model.listOfItems("Albums")); break;
-	   case 3:
-			System.out.println(model.listOfItems("Playlists")); break;
-	   case 4:
 			System.out.println(model.listOfItems("Artists")); break;
+	   case 3:
+			System.out.println(model.listOfItems("Albums")); break;
+	   case 4:
+			System.out.println(model.listOfItems("Playlists")); break;
 	   case 5:
 			System.out.println(model.listOfItems("Favorites")); break;
 	   default: 
@@ -224,7 +228,7 @@ public class View {
        scanner.nextLine(); // consume the leftover newline character
        
        switch (choice) {
-	   
+	  
 	   case 1: 
 		   System.out.println("What would you like to name your playlist?");
            String name = scanner.nextLine();
