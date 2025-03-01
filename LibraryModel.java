@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.io.IOException;
 
+
 public class LibraryModel {
 	
 	private ArrayList<Song> songs;
@@ -9,8 +10,9 @@ public class LibraryModel {
 	
 	private final MusicStore store;
 	
-	public LibraryModel () {
+	public LibraryModel () throws IOException {
 		this.store = new MusicStore();
+		store.readInAlbumInfo(); // build music store to reference
 		this.songs = new ArrayList<>();
 		this.albums = new ArrayList<>();
 		this.playlists = new ArrayList<>();
@@ -18,19 +20,21 @@ public class LibraryModel {
 	
 	   // get song info by title or artist
 		public String getSongInfo(String titleOrArtist) {
-			for (Album album : getAlbums()) 
+			String endInfo = "";
+			for (Album album : store.getAlbums()) 
 			{
 				for (Song song : album.getSongs())
 			    {
 					if (song.getArtist().equals(titleOrArtist) ||
 						song.getTitle().equals(titleOrArtist) ) 
 					{
-							System.out.println(song.toString() +
-									"\nAlbum: " + album.getTitle());
+							endInfo += song.toString() +
+									"\nAlbum: " + album.getTitle();
 				    }
 			    }
 		    }
-		return "Searched for Data is not in the database."; // need thing not found message
+		if (!endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
+		return endInfo; 
 		}
 		
 		// get album info and list of songs by title or Artist
@@ -46,20 +50,22 @@ public class LibraryModel {
 		
 		
 		// find playlist by provided name and print song details
-		public void searchForPlaylist(String playlistName) {
+		public String searchForPlaylist(String playlistName) {
 			for (Playlist playlist : playlists) {
 				if(playlist.getName().equals(playlistName)) {
-					System.out.println(playlist.toString());
+					return playlist.toString();
 				}
 			}
+		return "Playlist doesn't exist";
 		}
 		
 		public void addSongToLibrary(String songName) { 
-			// check if song in music store
-			if (store.isInStore(songName)) {
-				songs.add(new Song(songName));
+			for(Song song : store.getSongs()) {
+				if (store.isInStore(song.getTitle())) {
+					songs.add(song);
 			}
 		}
+	}
 		
 		public void addAlbumToLibrary(String albumName) {
 			for (Album album : store.getAlbums()) {
@@ -120,4 +126,48 @@ public class LibraryModel {
 			}
 			return list;
 		}
+		
+	public void createNewPlaylist(String name) {
+		playlists.add(new Playlist(name));
 	}
+	
+	public void addSongToPlaylist(String playlistName, String songName) {
+		 for (Playlist playlist : playlists) {
+			   if(playlist.getName().equals(playlistName)) {
+				   for (Song song : songs) {
+					   if(song.getTitle().equals(songName)) {
+						   playlist.addSong(songName, song.getArtist());
+					   }
+				   }
+			   }
+		   }
+	}
+	
+	public void removeSongFromPlaylist(String playlistName, String songName) {
+		for (Playlist playlist : playlists) {
+			   if(playlist.getName().equals(playlistName)) {
+				   for (Song song : songs) {
+					   if(song.getTitle().equals(songName)) {
+						   playlist.removeSong(songName);
+					   }
+}
+			   }
+		}
+	}
+	
+	public void markSongAsFavorite(String name) {
+		for (Song song : songs) {
+			if (song.getTitle().equals(name)) {
+				song.makeFavorite();
+			}
+		}
+	}
+	
+	public void rateSong(String name, int rating) {
+		for (Song song : songs) {
+			if (song.getTitle().equals(name)) {
+				song.rateSong(rating);
+			}
+		}
+	}
+}
