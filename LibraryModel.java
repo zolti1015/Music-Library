@@ -33,19 +33,23 @@ public class LibraryModel {
 				    }
 			    }
 		    }
-		if (!endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
+		if (endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
+		endInfo += "\n";
 		return endInfo; 
 		}
 		
 		// get album info and list of songs by title or Artist
 		public String getAlbumInfo(String titleOrArtist) {
+			String endInfo = "";
 			for (Album album : albums) {
 				if (album.getTitle().equals(titleOrArtist) ||
 					album.getArtist().equals(titleOrArtist)) {
-					System.out.println(album.toString()); // printing here, so if multiple results loop will continue to search
+					endInfo += album.toString(); // printing here, so if multiple results loop will continue to search
 				}
 			}
-		return "Searched for Data is not in the database.";
+			if (endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
+			endInfo += "\n";
+			return endInfo; 
 		}
 		
 		
