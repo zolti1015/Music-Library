@@ -1,5 +1,3 @@
-
-import java.util.List;
 import java.util.Scanner;
 
 
@@ -128,12 +126,12 @@ public class View {
                 case 3:
                 	 System.out.println("Enter title: ");
                      String title2 = scanner.nextLine();
-                     System.out.println(model.getStore().getSongInfo(title2));
+                     System.out.println(model.getStore().getAlbumInfo(title2));
                      break;
                 case 4:
                	 	 System.out.println("Enter artist: ");
                      String artist2 = scanner.nextLine();
-                     System.out.println(model.getStore().getSongInfo(artist2));
+                     System.out.println(model.getStore().getAlbumInfo(artist2));
                      break;
                 case 5:
                      System.out.println("Enter title: ");
@@ -148,12 +146,12 @@ public class View {
                 case 7:
                 	 System.out.println("Enter title: ");
                      String title4 = scanner.nextLine();
-                     System.out.println(model.getSongInfo(title4));
+                     System.out.println(model.getAlbumInfo(title4));
                      break;
                 case 8:
                	 	System.out.println("Enter artist: ");
                     String artist4 = scanner.nextLine();
-                    System.out.println(model.getSongInfo(artist4));
+                    System.out.println(model.getAlbumInfo(artist4));
                     break;
                 default: 
               	  	System.out.println("Invalid input"); 
