@@ -61,22 +61,24 @@ public class MusicStore {
 }
 	
 	// get song info by title or artist
-		public String getSongInfo(String titleOrArtist) {
-				for (Album album : albums) 
+	public String getSongInfo(String titleOrArtist) {
+		String endInfo = "";
+		for (Album album : albums) 
+		{
+			for (Song song : album.getSongs())
+		    {
+				if (song.getArtist().equals(titleOrArtist) ||
+					song.getTitle().equals(titleOrArtist) ) 
 				{
-					for (Song song : album.getSongs())
-				    {
-						if (song.getArtist().equals(titleOrArtist) ||
-							song.getTitle().equals(titleOrArtist) ) 
-						{
-								return song.toString() +
-										"\nAlbum: " + album.getTitle();
-					    }
-				   }
-			   }
-			return "Searched for Data is not in the database."; // need thing not found message
+						endInfo += song.toString() +
+								"\nAlbum: " + album.getTitle();
+			    }
+		    }
+	    }
+	if (!endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
+	return endInfo; 
 	}
-			
+	
 		// get album info and list of songs by title or Artist
 		public String getAlbumInfo(String titleOrArtist) {
 				for (Album album : albums) {
