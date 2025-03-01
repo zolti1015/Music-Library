@@ -6,8 +6,8 @@ import java.util.List;
 
 public class MusicStore {
 	
-	ArrayList<Album> albums = new ArrayList<>();
-	ArrayList<Song> songs = new ArrayList<>();
+	private ArrayList<Album> albums = new ArrayList<>();
+	private ArrayList<Song> songs = new ArrayList<>();
 	
 	
 	/*
@@ -53,15 +53,16 @@ public class MusicStore {
 				
 				String songName = albums.readLine(); // advances one line
 				if (songName == null) break; // end of song list file 
-				album.addSong(songName);  // add the song to the album's collection of songs in the list
-				songs.add(new Song(songName)); // add song to music store
+				Song song = new Song(songName, albumHeader[1]);
+				album.addSong(song);  // add the song to the album's collection of songs in the list
+				songs.add(new Song(songName, albumHeader[1])); // add song to music store
 		}
 	}
 }
 	
 	// get song info by title or artist
 		public String getSongInfo(String titleOrArtist) {
-				for (Album album : getAlbums()) 
+				for (Album album : albums) 
 				{
 					for (Song song : album.getSongs())
 				    {
@@ -76,29 +77,30 @@ public class MusicStore {
 			return "Searched for Data is not in the database."; // need thing not found message
 	}
 			
-			// get album info and list of songs by title or Artist
+		// get album info and list of songs by title or Artist
 		public String getAlbumInfo(String titleOrArtist) {
 				for (Album album : albums) {
 					if (album.getTitle().equals(titleOrArtist) ||
 						album.getArtist().equals(titleOrArtist)) {
 						return album.toString();
 					}
-					}
+				}
 			return "Searched for Data is not in the database.";
 			}
 			
 		
 	public boolean isInStore(String songOrAlbumName) {
-		if(songs.contains(new Song(songOrAlbumName))) { 
-			return true;
+		for (Song song : songs) {
+			if(song.getTitle().equals(songOrAlbumName)) { 
+				return true;
 		}
 		for (Album album : albums) {
 			if (album.getTitle().equals(songOrAlbumName)) {
 				return true;
 			}
 		}
-		
-		return false;
+	}
+	return false;
 	}
 	
 	public ArrayList<Song> getSongs () {
@@ -107,9 +109,5 @@ public class MusicStore {
 	
 	public ArrayList<Album> getAlbums () {
 		return new ArrayList<Album>(albums); // copy list to avoid reference
-	}
-	
-	public static void main (String[] args) throws IOException {
-		
 	}
 }
