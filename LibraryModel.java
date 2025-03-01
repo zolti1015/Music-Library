@@ -21,18 +21,27 @@ public class LibraryModel {
 	   // get song info by title or artist
 		public String getSongInfo(String titleOrArtist) {
 			String endInfo = "";
-			for (Album album : albums) 
-			{
-				for (Song song : album.getSongs())
-			    {
+			if (albums.isEmpty()) {
+			for (Song song : songs) {
 					if (song.getArtist().equals(titleOrArtist) ||
 						song.getTitle().equals(titleOrArtist) ) 
 					{
-							endInfo += song.toString() +
-									"\nAlbum: " + album.getTitle();
-				    }
+							endInfo += song.toString();				    }
 			    }
 		    }
+				else {
+					for (Album album : albums) {
+						for (Song song : album.getSongs()) {
+							if (song.getArtist().equals(titleOrArtist) ||
+								song.getTitle().equals(titleOrArtist) ) 
+							{
+									endInfo += song.toString() +
+											"\nAlbum: " + album.getTitle();
+						    }
+					    }
+				    
+				}
+			}
 		if (endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
 		endInfo += "\n";
 		return endInfo; 
@@ -57,7 +66,13 @@ public class LibraryModel {
 		public String searchForPlaylist(String playlistName) {
 			for (Playlist playlist : playlists) {
 				if(playlist.getName().equals(playlistName)) {
-					return playlist.toString();
+					if(playlist.toString() == null) {
+						return "Playlist is empty";
+					}
+					else {
+						return playlist.toString();
+					}
+					
 				}
 			}
 		return "Playlist doesn't exist";
@@ -65,7 +80,7 @@ public class LibraryModel {
 		
 		public void addSongToLibrary(String songName) { 
 			for(Song song : store.getSongs()) {
-				if (store.isInStore(song.getTitle())) {
+				if (song.getTitle().equals(songName)) {
 					songs.add(song);
 			}
 		}
@@ -108,7 +123,7 @@ public class LibraryModel {
 			switch(command.toLowerCase()) {
 				case "songs":
 					for (Song song : songs) {
-						list += song.toString(); }
+						list += song.toString() + "\n"; }
 					break;
 				case "artists":
 					for (Song song : songs) {
@@ -128,6 +143,7 @@ public class LibraryModel {
 							list += song.toString() + "\n"; }
 					break;
 			}
+			list += "\n";
 			return list;
 		}
 		
