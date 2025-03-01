@@ -75,7 +75,8 @@ public class MusicStore {
 			    }
 		    }
 	    }
-	if (!endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
+	if (endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
+	endInfo += "\n";
 	return endInfo; 
 	}
 	
