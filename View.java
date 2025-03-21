@@ -1,28 +1,35 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 
 public class View {
-    private LibraryModel model;
+    
+	
     private Scanner scanner;
+    private LibraryModel model;
+    private UserAccount user;
+    private final usernameAndPasswordDatabase database= new usernameAndPasswordDatabase();
 
-
-    public View(LibraryModel model) {
-        this.model = model;
+    public View() {
         this.scanner = new Scanner(System.in);
     }
 
 
-    public void run() {
+    public void run() throws IOException {
+    	handleSignIn();
+    	
         displayWelcomeMessage();
         
         while (true) {
             displayMainMenu();
+            
             System.out.println("Enter your choice: ");
             int choice = scanner.nextInt();
             
             switch (choice) {
-                case 0:
+                case 0: // sign out of account
                     System.out.println("Exiting... Goodbye.");
+                    this.user.writeLibraryToFile(); // store user library info to unique txt file
                     return;
                 case 1:
                     handleSearchMenu();
@@ -43,7 +50,34 @@ public class View {
             }
         }
     }
-
+    
+    private void handleSignIn() throws IOException {
+    	System.out.println("1. LOGIN\n"
+    					 + "2. CREATE ACCOUNT");
+    	int choice = scanner.nextInt();
+    	
+    	System.out.println("Username:");
+        String username = scanner.nextLine();
+        System.out.println("Password:");
+        String password = scanner.nextLine();
+        
+    	switch (choice) {
+    		case 1: 
+    			user = new UserAccount(username, password);
+    			if (!database.findUser(user)) {
+    				System.out.println("Username or password incorrect!");
+    				handleSignIn(); // revert to login screen to try again
+    			}
+    			this.model = user.readLibraryFromFile(username); // else restore user data
+    			
+    		case 2: 
+    			user = new UserAccount(username, password);
+    			System.out.println("Account successfully created!");
+    			this.model = user.getLibrary();
+    			break;
+    	}  
+    }
+    
     private void displayMainMenu() {
         System.out.println("\nMAIN MENU");
         System.out.println("1. Search for music");
@@ -51,7 +85,7 @@ public class View {
         System.out.println("3. List library items");
         System.out.println("4. Manage playlists");
         System.out.println("5. Song actions (favorite/rate)");
-        System.out.println("0. Exit");
+        System.out.println("0. SignOut");
     }
 
     private void displaySearchMenu() {
@@ -116,42 +150,42 @@ public class View {
                 case 1:
                      System.out.println("Enter title: ");
                      String title = scanner.nextLine();
-                     System.out.println(model.getStore().getSongInfo(title));
+                     System.out.println(model.getStore().getSongInfoByTitle(title));
                      break;
                 case 2: 
                 	 System.out.println("Enter artist: ");
                      String artist = scanner.nextLine();
-                     System.out.println(model.getStore().getSongInfo(artist));
+                     System.out.println(model.getStore().getSongInfoByArtist(artist));
                      break;
                 case 3:
                 	 System.out.println("Enter title: ");
                      String title2 = scanner.nextLine();
-                     System.out.println(model.getStore().getAlbumInfo(title2));
+                     System.out.println(model.getStore().getAlbumInfoByTitle(title2));
                      break;
                 case 4:
                	 	 System.out.println("Enter artist: ");
                      String artist2 = scanner.nextLine();
-                     System.out.println(model.getStore().getAlbumInfo(artist2));
+                     System.out.println(model.getStore().getAlbumInfoByArtist(artist2));
                      break;
                 case 5:
                      System.out.println("Enter title: ");
                      String title3 = scanner.nextLine();
-                     System.out.println(model.getSongInfo(title3));
+                     System.out.println(model.getSongInfoByTitle(title3));
                      break;
                 case 6: 
                 	 System.out.println("Enter artist: ");
                      String artist3 = scanner.nextLine();
-                     System.out.println(model.getSongInfo(artist3));
+                     System.out.println(model.getSongInfoByArtist(artist3));
                      break;
                 case 7:
                 	 System.out.println("Enter title: ");
                      String title4 = scanner.nextLine();
-                     System.out.println(model.getAlbumInfo(title4));
+                     System.out.println(model.getAlbumInfoByTitle(title4));
                      break;
                 case 8:
                	 	System.out.println("Enter artist: ");
                     String artist4 = scanner.nextLine();
-                    System.out.println(model.getAlbumInfo(artist4));
+                    System.out.println(model.getAlbumInfoByArtist(artist4));
                     break;
                 default: 
               	  	System.out.println("Invalid input"); 
