@@ -1,109 +1,136 @@
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.IOException;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class LibraryModel {
 	
-	private ArrayList<Song> songs;
-	private ArrayList<Album> albums;
-	private ArrayList<Playlist> playlists;
+	private Map<String, Album> albums; // assume no albums have same name
+	private Map<String, ArrayList<Song>> songs; // list of songs, some songs have same name
+	private Map<String, Playlist> playlists;
+	private Map<String, ArrayList<Album>> ArtistAndAlbums; // artist name, list of albums
+	private Map<String, ArrayList<Song>> ArtistAndSongs; // artist name, list of songs
+	
+	private Playlist favorites = new Playlist("Favorites");
 	
 	private final MusicStore store;
 	
 	public LibraryModel () throws IOException {
 		this.store = new MusicStore();
 		store.readInAlbumInfo(); // build music store to reference
-		this.songs = new ArrayList<>();
-		this.albums = new ArrayList<>();
-		this.playlists = new ArrayList<>();
+		
+		this.songs = new HashMap<>();
+		this.albums = new HashMap<>();
+		this.playlists = new HashMap<>();
+		this.ArtistAndAlbums = new HashMap<>();
+		this.ArtistAndSongs = new HashMap<>();
 	}
 	
-	   // get song info by title or artist
-		public String getSongInfo(String titleOrArtist) {
+		public String getSongInfoByTitle(String title) {
+				
 			String endInfo = "";
-			if (albums.isEmpty()) {
-			for (Song song : songs) {
-					if (song.getArtist().equals(titleOrArtist) ||
-						song.getTitle().equals(titleOrArtist) ) 
-					{
-							endInfo += song.toString();				    }
-			    }
-		    }
-				else {
-					for (Album album : albums) {
-						for (Song song : album.getSongs()) {
-							if (song.getArtist().equals(titleOrArtist) ||
-								song.getTitle().equals(titleOrArtist) ) 
-							{
-									endInfo += song.toString() +
-											"\nAlbum: " + album.getTitle();
-						    }
-					    }
-				    
+			ArrayList<Song> songList = songs.get(title);
+				
+			if (songList != null) {
+				for (Song song : songList) {
+					endInfo += (song.toString()) ;		
 				}
 			}
-		if (endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
-		endInfo += "\n";
-		return endInfo; 
+				
+			if (endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
+			endInfo += "\n";
+				
+			return endInfo; 
 		}
 		
-		// get album info and list of songs by title or Artist
-		public String getAlbumInfo(String titleOrArtist) {
+		public String getSongInfoByArtist(String artist) {
+			
 			String endInfo = "";
-			for (Album album : albums) {
-				if (album.getTitle().equals(titleOrArtist) ||
-					album.getArtist().equals(titleOrArtist)) {
-					endInfo += album.toString(); // printing here, so if multiple results loop will continue to search
+			
+			ArrayList<Song> songs = ArtistAndSongs.get(artist);
+			
+			if (songs != null) {
+				for (Song song : songs) {
+						endInfo += song.toString();		
+					}
 				}
-			}
+			
 			if (endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
 			endInfo += "\n";
 			return endInfo; 
 		}
 		
+		public String getAlbumInfoByTitle(String title) {
+				
+				String endInfo = "";
+				Album album = albums.get(title);
+				if (album != null) endInfo += albums.get(title).toString(); 
+					
+				if (endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
+				endInfo += "\n";
+				return endInfo; 
+			}
+		
+		// get album info and list of songs by artist name
+		public String getAlbumInfoByArtist(String artist) {
+					
+				String endInfo = "";
+				ArrayList<Album> albums = ArtistAndAlbums.get(artist);
+				
+				if (albums != null) {
+					for (Album album : albums) {
+						endInfo += album.toString(); 
+					}
+				}
+				if (endInfo.equals("")) endInfo += "Searched for Data is not in the database.";
+				endInfo += "\n";
+				return endInfo; 
+			}
 		
 		// find playlist by provided name and print song details
 		public String searchForPlaylist(String playlistName) {
-			for (Playlist playlist : playlists) {
-				if(playlist.getName().equals(playlistName)) {
-					if(playlist.toString() == null) {
-						return "Playlist is empty";
-					}
-					else {
-						return playlist.toString();
-					}
-					
-				}
-			}
-		return "Playlist doesn't exist";
+			Playlist playlist = playlists.get(playlistName);
+			return (playlist != null) ? playlist.toString() : "Playlist doesn't exist";
 		}
 		
 		public void addSongToLibrary(String songName) { 
-			for(Song song : store.getSongs()) {
-				if (song.getTitle().equals(songName)) {
-					songs.add(song);
+			ArrayList<Song> songList = store.getSongs().get(songName);
+			if (songList != null) {
+				
+				this.songs.putIfAbsent(songName, new ArrayList<>());
+		        this.songs.get(songName).addAll(songList);  
+		        
+		        for (Song song : songList) {
+		        	this.ArtistAndSongs.putIfAbsent(song.getArtist(), new ArrayList<>());
+		        	this.ArtistAndSongs.get(song.getArtist()).add(song); 
+		        }
+		        
 			}
+			else System.out.println("Song not in store!");
 		}
-	}
 		
 		public void addAlbumToLibrary(String albumName) {
-			for (Album album : store.getAlbums()) {
-				if(album.getTitle().equals(albumName)) {
-					albums.add(album);
-				}
+			Album album = store.getAlbums().get(albumName);
+			if (album != null) {
+				albums.put(albumName, album);
+				this.ArtistAndAlbums.putIfAbsent(album.getArtist(), new ArrayList<>());
+				this.ArtistAndAlbums.get(album.getArtist()).add(album); // assume no albums have same name
+				
 			}
+			else System.out.println("Album not in store!");
 		}
 		
-		public ArrayList<Song> getSongs () {
-			return new ArrayList<Song>(songs); // copy list to avoid reference
+		public HashMap<String, ArrayList<Song>> getSongs () {
+			return new HashMap<String, ArrayList<Song>>(songs); // copy list to avoid reference
 		}
 		
-		public ArrayList<Album> getAlbums () {
-			return new ArrayList<Album>(albums); // copy list to avoid reference
+		public HashMap<String, Album> getAlbums () {
+			return new HashMap<String, Album>(albums); // copy list to avoid reference
 		}
-
-		public ArrayList<Playlist> getPlaylists() {
-			return new ArrayList<Playlist>(playlists); // copy list to avoid reference
+		
+		public HashMap<String, Playlist> getPlaylists() {
+			return new HashMap<String, Playlist>(playlists); // copy list to avoid reference
 		}
 		
 		public MusicStore getStore() {
@@ -121,73 +148,58 @@ public class LibraryModel {
 		public String listOfItems(String command) {
 			String list = "";
 			switch(command.toLowerCase()) {
+			
 				case "songs":
-					for (Song song : songs) {
-						list += song.toString() + "\n"; }
+					list = Arrays.toString(songs.keySet().toArray());
 					break;
 				case "artists":
-					for (Song song : songs) {
-						list += song.getArtist() + "\n"; }
+					list = Arrays.toString(ArtistAndAlbums.keySet().toArray());
 					break;
 				case "albums": 
-					for (Album album : albums) {
-						list += album.getTitle() + "\n"; }
+					list = Arrays.toString(albums.keySet().toArray());
 					break;
 				case "playlists":
-					for (Playlist playlist : playlists) {
-						list += playlist.getName() + "\n"; }
+					list = Arrays.toString(playlists.keySet().toArray());
 					break;
 				case "favorites":
-					for (Song song : songs) {
-						if(song.getFavStatus()) 
-							list += song.toString() + "\n"; }
+					for (ArrayList<Song> songs : songs.values()) {
+						for (Song song : songs ) {
+							if(song.getFavStatus()) list += song + "\n"; 
+						}
 					break;
+					}
 			}
 			list += "\n";
 			return list;
 		}
 		
 	public void createNewPlaylist(String name) {
-		playlists.add(new Playlist(name));
+		playlists.put(name, new Playlist(name));
 	}
 	
 	public void addSongToPlaylist(String playlistName, String songName) {
-		 for (Playlist playlist : playlists) {
-			   if(playlist.getName().equals(playlistName)) {
-				   for (Song song : songs) {
-					   if(song.getTitle().equals(songName)) {
-						   playlist.addSong(songName, song.getArtist());
-					   }
-				   }
-			   }
-		   }
+		Playlist playlist = playlists.get(playlistName);
+		ArrayList<Song> songList = this.songs.get(songName);
+		
+		if (playlist != null && songList != null) {
+			songList.forEach(song -> playlist.addSong(song));
+		}   
 	}
 	
 	public void removeSongFromPlaylist(String playlistName, String songName) {
-		for (Playlist playlist : playlists) {
-			   if(playlist.getName().equals(playlistName)) {
-				   for (Song song : songs) {
-					   if(song.getTitle().equals(songName)) {
-						   playlist.removeSong(songName);
-					   }
-}
-			   }
-		}
+		playlists.get(playlistName).removeSong(songName);
 	}
 	
 	public void markSongAsFavorite(String name) {
-		for (Song song : songs) {
-			if (song.getTitle().equals(name)) {
-				song.makeFavorite();
-			}
-		}
+		ArrayList<Song> songs = this.songs.get(name);
+		songs.forEach(song -> song.makeFavorite());
+		songs.forEach(song -> favorites.addSong(song));
 	}
 	
 	public void rateSong(String name, int rating) {
+		ArrayList<Song> songs = this.songs.get(name);
 		for (Song song : songs) {
-			if (song.getTitle().equals(name)) {
-				song.rateSong(rating);
-			}
-		}
+			song.rateSong(rating);
+		}   
 	}
 }
