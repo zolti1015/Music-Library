@@ -1,13 +1,12 @@
-import java.util.ArrayList;
-
+import java.util.HashMap;
 
 public class Playlist {
 
 	private String name;
-	private ArrayList<Song> playlist;
+	private HashMap<String, Song> songs;
 	
 	public Playlist(String name) {
-		this.playlist = new ArrayList<Song>();
+		this.songs= new HashMap<String, Song>();
 		this.name = name;
 	}
 	
@@ -15,26 +14,24 @@ public class Playlist {
 		return name;
 	}
 	
-	public ArrayList<Song> getSongs() {
-		return new ArrayList<Song>(playlist);
+	public HashMap<String, Song> getSongs() {
+		return new HashMap<String, Song>(songs);
 	}
 	
-	
-	public void addSong(String name, String Artist) {
-		playlist.add(new Song(name, Artist));
+	public void addSong(Song song) {
+		songs.put(song.getTitle(), song);
 	}
 	
 	public void removeSong(String name) {
-		for (Song song : playlist) {
-			if(song.getTitle().equals(name)) playlist.remove(song);
-		}
+		songs.remove(name);
 	}
+	
 	@Override
 	public String toString() {
-		String songs = "Songs: ";
-		for (Song song : playlist) {
-			songs += song.getTitle() + " by " + song.getArtist() + "\n";
+		String list = "Songs: ";
+		for (Song song : songs.values()) {
+			list += song.getTitle() + " by " + song.getArtist() + "\n";
 		}
-		return songs;
+		return list;
 	}
 }
