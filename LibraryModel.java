@@ -1,8 +1,13 @@
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
 
 public class LibraryModel {
 	
@@ -12,7 +17,12 @@ public class LibraryModel {
 	private Map<String, ArrayList<Album>> ArtistAndAlbums; // artist name, list of albums
 	private Map<String, ArrayList<Song>> ArtistAndSongs; // artist name, list of songs
 	
-	private Playlist favorites = new Playlist("Favorites");
+	private Playlist favorites;
+	private final Map<String, Integer> playCount;
+	private final LinkedList<String> recentPlays; // automatic, user can query 
+	
+	private static final int MAX_TRACKED = 10;
+	
 	
 	private final MusicStore store;
 	
@@ -20,11 +30,15 @@ public class LibraryModel {
 		this.store = new MusicStore();
 		store.readInAlbumInfo(); // build music store to reference
 		
-		this.songs = new HashMap<>();
+		this.songs = new LinkedHashMap<>(); // linked version, assume order of songs matters
 		this.albums = new HashMap<>();
 		this.playlists = new HashMap<>();
 		this.ArtistAndAlbums = new HashMap<>();
 		this.ArtistAndSongs = new HashMap<>();
+		
+		favorites = new Playlist("Favorites");
+		playCount = new HashMap<>();
+		recentPlays = new LinkedList<>();
 	}
 	
 		public String getSongInfoByTitle(String title) {
@@ -137,6 +151,7 @@ public class LibraryModel {
 			return store;
 		}
 		
+
 		/*
 		get a list of items from the library 
 		● a list of song titles (any order) 
@@ -187,9 +202,36 @@ public class LibraryModel {
 	}
 	
 	public void removeSongFromPlaylist(String playlistName, String songName) {
-		playlists.get(playlistName).removeSong(songName);
+		Playlist playlist = playlists.get(playlistName);
+		ArrayList<Song> songList = this.songs.get(songName);
+		
+		if (playlist != null && songList != null) {
+			songList.forEach(song -> playlist.removeSong(song));
+		}   
 	}
-
+	
+	public void markSongAsFavorite(String name) {
+		ArrayList<Song> songs = this.songs.get(name);
+		songs.forEach(song -> { song.makeFavorite(); 
+								favorites.addSong(song); });
+		
+	}
+	
+	public void rateSong(String name, int rating) {
+		ArrayList<Song> songs = this.songs.get(name);
+		songs.forEach(song -> song.rateSong(rating));
+	}
+	
+	
+	
+	public void getSongsByGenre(String genre) {
+		Collection<ArrayList<Song>> listsOfSongs = songs.values();
+		for (ArrayList<Song> songs : listsOfSongs) {
+			
+		}
+	}
+	
+	
 	 public void playSong(String song) {
 	        System.out.println("Now playing: " + song);
 	        if (songs.get(song) != null) {
@@ -201,17 +243,11 @@ public class LibraryModel {
 	        	}
 	        }
 	 }
-	
-	public void markSongAsFavorite(String name) {
-		ArrayList<Song> songs = this.songs.get(name);
-		songs.forEach(song -> song.makeFavorite());
-		songs.forEach(song -> favorites.addSong(song));
-	}
-	
-	public void rateSong(String name, int rating) {
-		ArrayList<Song> songs = this.songs.get(name);
-		for (Song song : songs) {
-			song.rateSong(rating);
-		}   
+	 
+	 
+	public void shuffleSongs() {
+		List<String> list = new ArrayList<String>(songs.keySet());
+	    Collections.shuffle(list);
+	    list.forEach(songName->songs.put(songName, songs.get(songName)));
 	}
 }
