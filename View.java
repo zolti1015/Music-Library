@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 
@@ -8,14 +9,13 @@ public class View {
     private Scanner scanner;
     private LibraryModel model;
     private UserAccount user;
-    private final usernameAndPasswordDatabase database= new usernameAndPasswordDatabase();
 
     public View() {
         this.scanner = new Scanner(System.in);
     }
 
 
-    public void run() throws IOException {
+    public void run() throws IOException, NoSuchAlgorithmException {
     	handleSignIn();
     	
         displayWelcomeMessage();
@@ -51,7 +51,7 @@ public class View {
         }
     }
     
-    private void handleSignIn() throws IOException {
+    private void handleSignIn() throws IOException, NoSuchAlgorithmException {
     	System.out.println("1. LOGIN\n"
     					 + "2. CREATE ACCOUNT");
     	int choice = scanner.nextInt();
@@ -62,19 +62,25 @@ public class View {
         String password = scanner.nextLine();
         
     	switch (choice) {
-    		case 1: 
+    		// logging in
+    		case 1:
     			user = new UserAccount(username, password);
-    			if (!database.findUser(user)) {
+    			if (!usernameAndPasswordDatabase.isLoginValid(user)) {
     				System.out.println("Username or password incorrect!");
     				handleSignIn(); // revert to login screen to try again
     			}
     			this.model = user.readLibraryFromFile(username); // else restore user data
-    			
+    			System.out.println("Successfully signed in!");
+    			break;
+    		// creating new account
     		case 2: 
     			user = new UserAccount(username, password);
     			System.out.println("Account successfully created!");
     			this.model = user.getLibrary();
     			break;
+    		default: 
+    			System.out.println("Invalid input. Try again");
+    			handleSignIn();
     	}  
     }
     
@@ -84,7 +90,7 @@ public class View {
         System.out.println("2. Add to library");
         System.out.println("3. List library items");
         System.out.println("4. Manage playlists");
-        System.out.println("5. Song actions (favorite/rate)");
+        System.out.println("5. Song actions (favorite/rate/play)");
         System.out.println("0. SignOut");
     }
 
@@ -117,6 +123,8 @@ public class View {
         System.out.println("3. List all albums");
         System.out.println("4. List all playlists");
         System.out.println("5. List favorite songs");
+        System.out.println("6. List mostRecent");
+        System.out.println("7. List mostPlayed");
         System.out.println("0. Back to main menu");
     }
 
@@ -133,6 +141,7 @@ public class View {
         System.out.println("\nSONG ACTIONS MENU");
         System.out.println("1. Mark song as favorite");
         System.out.println("2. Rate song");
+        System.out.println("3. Play song");
         System.out.println("0. Back to main menu");
     }
 
@@ -246,6 +255,10 @@ public class View {
 			System.out.println(model.listOfItems("Playlists")); break;
 	   case 5:
 			System.out.println(model.listOfItems("Favorites")); break;
+	   case 6:
+		   	System.out.println(model.getMostRecent().toString()); break;
+	   case 7:
+		   	System.out.println(model.getMostPlayed().toString()); break;
 	   default: 
      	  System.out.println("Invalid input"); 
    }
@@ -322,10 +335,13 @@ public class View {
                
                model.rateSong(name2, rating);
                break;
+          case 3: 
+        	  System.out.println("Which song would you like to play?");
+              String toPlay = scanner.nextLine();
+              model.playSong(toPlay);
           default: 
         	  System.out.println("Invalid input"); 
        }
    }
    }
-   
 }
