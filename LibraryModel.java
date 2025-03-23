@@ -189,6 +189,18 @@ public class LibraryModel {
 	public void removeSongFromPlaylist(String playlistName, String songName) {
 		playlists.get(playlistName).removeSong(songName);
 	}
+
+	 public void playSong(String song) {
+	        System.out.println("Now playing: " + song);
+	        if (songs.get(song) != null) {
+	        	playCount.put(song, playCount.getOrDefault(song, 0) + 1);
+	        	recentPlays.remove(song);
+	        	recentPlays.addFirst(song);
+	        	if (recentPlays.size() > MAX_TRACKED) {
+	        		recentPlays.removeLast();
+	        	}
+	        }
+	 }
 	
 	public void markSongAsFavorite(String name) {
 		ArrayList<Song> songs = this.songs.get(name);
