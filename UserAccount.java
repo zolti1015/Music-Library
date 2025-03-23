@@ -19,7 +19,8 @@ public class UserAccount {
 		this.password= password;
 		this.library = new LibraryModel();
 	}
-	
+
+	// TO DO: take user library and write all the date to a txt file
 	public void writeLibraryToFile() throws IOException {
 		// need to take a user's library and write the data to a user specific txt file 
 		
@@ -28,7 +29,7 @@ public class UserAccount {
 		
 	}
 	
-	
+	// TO DO: take user txt file and rewrite all data to their library
 	public LibraryModel readLibraryFromFile(String username) throws IOException {
 		
 		LibraryModel userLibrary = new LibraryModel();
