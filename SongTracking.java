@@ -32,3 +32,10 @@ class SongTracker {
     public List<String> getMostRecentlyPlayed() {
         return new ArrayList<>(recentPlays);
     }
+
+    public List<String> getMostFrequentlyPlayed() {
+        return playCount.entrySet().stream()
+                .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
+                .limit(MAX_TRACKED)
+                .map(Map.Entry::getKey)
+                .toList();
