@@ -45,7 +45,7 @@ public class usernameAndPasswordDatabase {
 	}
 	
 	public static boolean isLoginValid(UserAccount account) throws NoSuchAlgorithmException, IOException {
-		// search for username, apply salt to input password and hash, reference hash password we have stored
+		// search for username, apply salt to input password and hash, compare with hash password we have stored
 		File file = new File("usersAndPass.txt");
 		FileReader reader;
 		BufferedReader database;
