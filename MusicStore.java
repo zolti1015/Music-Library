@@ -47,7 +47,7 @@ public class MusicStore {
 			BufferedReader albums = new BufferedReader(file); // open a specific album file 
 			
 			String[] albumHeader = albums.readLine().split(",");
-			// (Album Title, Artist, Genre, Year) data from line 1
+							    // (Album Title,    Artist,         Genre,          Year) data from line 1
 			Album album = new Album(albumHeader[0], albumHeader[1], albumHeader[2], albumHeader[3]);
 			this.albums.put(album.getTitle(), album); // add album to store
 			
@@ -55,8 +55,8 @@ public class MusicStore {
 			String songName;
 			while ((songName = albums.readLine()) != null) {
 				
-									// name,   Artist,         album song is on
-				Song song = new Song(songName, albumHeader[1], albumHeader[0]);
+									// name,   Artist,         album song is on  genre
+				Song song = new Song(songName, albumHeader[1], albumHeader[0], albumHeader[2]);
 				album.addSong(song);  // add the song to the album's collection of songs in the list
 				
 				songs.putIfAbsent(song.getTitle(), new ArrayList<Song>());
@@ -146,5 +146,9 @@ public class MusicStore {
 	
 	public HashMap<String, Album> getAlbums () {
 		return new HashMap<String, Album>(albums); // copy list to avoid reference
+	}
+	
+	public void getAlbumInfoForSong(String songName) {
+		songs.get(songName).forEach(song -> albums.get(song.getAlbumOn()).toString());
 	}
 }
