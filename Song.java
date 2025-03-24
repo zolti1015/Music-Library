@@ -4,15 +4,17 @@ public class Song {
 	private final String title;
 	private final String artist;
 	private final String albumOn;
+	private final String genre;
 	public enum Rating {ONE, TWO, THREE, FOUR, FIVE}
 	private Rating rating;
 	private boolean favorite;
 	
-	public Song(String title, String artist, String albumOn) {
+	public Song(String title, String artist, String albumOn, String genre) {
 		this.title = title;
 		this.artist = artist;
 		this.albumOn = albumOn;
 		this.favorite = false;
+		this.genre = genre;
 	}
 	
 	public void rateSong(int ratingOneToFive) {
@@ -60,5 +62,13 @@ public class Song {
 	
 	public boolean getFavStatus() {
 		return this.favorite;
+	}
+	
+	public String getGenre() {
+		return genre;
+	}
+	
+	public Rating getRating() {
+		return this.rating;
 	}
 }
