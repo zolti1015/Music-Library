@@ -68,6 +68,7 @@ public class View {
     			if (!usernameAndPasswordDatabase.isLoginValid(user)) {
     				System.out.println("Username or password incorrect!");
     				handleSignIn(); // revert to login screen to try again
+    				return; 
     			}
     			this.model = user.readLibraryFromFile(username); // else restore user data
     			System.out.println("Successfully signed in!");
@@ -81,6 +82,7 @@ public class View {
     		default: 
     			System.out.println("Invalid input. Try again");
     			handleSignIn();
+    			return; 
     	}  
     }
     
@@ -123,8 +125,6 @@ public class View {
         System.out.println("3. List all albums");
         System.out.println("4. List all playlists");
         System.out.println("5. List favorite songs");
-        System.out.println("6. List mostRecent");
-        System.out.println("7. List mostPlayed");
         System.out.println("0. Back to main menu");
     }
 
@@ -142,6 +142,7 @@ public class View {
         System.out.println("1. Mark song as favorite");
         System.out.println("2. Rate song");
         System.out.println("3. Play song");
+        System.out.println("4. Sort songs");
         System.out.println("0. Back to main menu");
     }
 
@@ -160,6 +161,16 @@ public class View {
                      System.out.println("Enter title: ");
                      String title = scanner.nextLine();
                      System.out.println(model.getStore().getSongInfoByTitle(title));
+                     System.out.println("Would you like the album info for this song(s)? (y/n)");
+                     String yesOrNo = scanner.nextLine();
+                     
+                     if (yesOrNo.equals("n")) break;
+                     if (yesOrNo.equals("y")) {
+                    	 model.getStore().getAlbumInfoForSong(title); // show song's album info from store
+                    	 if (model.getAlbums().get(model.getStore().getSongs().get(title).get(0).getAlbumOn()) != null) {
+                    		 System.out.println("Album is in the library!");
+                    	 }
+                     }
                      break;
                 case 2: 
                 	 System.out.println("Enter artist: ");
@@ -255,10 +266,6 @@ public class View {
 			System.out.println(model.listOfItems("Playlists")); break;
 	   case 5:
 			System.out.println(model.listOfItems("Favorites")); break;
-	   case 6:
-		   	System.out.println(model.getMostRecent().toString()); break;
-	   case 7:
-		   	System.out.println(model.getMostPlayed().toString()); break;
 	   default: 
      	  System.out.println("Invalid input"); 
    }
@@ -300,6 +307,7 @@ public class View {
 	   case 4:
 		   System.out.println("Enter playlist name: ");
            String playlist = scanner.nextLine();
+        	    
        	   System.out.println(model.searchForPlaylist(playlist));
        	   break;
 	   case 0:
@@ -339,9 +347,15 @@ public class View {
         	  System.out.println("Which song would you like to play?");
               String toPlay = scanner.nextLine();
               model.playSong(toPlay);
+          case 4:
+        	  System.out.println("By: 1. rating \n 2. artist \n 3. title ");
+        	  int type = scanner.nextInt();
+        	  model.printSortedSongs(type);
+        	  
           default: 
         	  System.out.println("Invalid input"); 
        }
    }
    }
+   
 }
