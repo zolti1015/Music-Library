@@ -2,6 +2,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +17,8 @@ public class LibraryModel {
 	private Map<String, Playlist> playlists;
 	private Map<String, ArrayList<Album>> ArtistAndAlbums; // artist name, list of albums
 	private Map<String, ArrayList<Song>> ArtistAndSongs; // artist name, list of songs
+	
+	private Map<String, ArrayList<Song>> AlbumAndSongs; // artist name, list of songs
 	
 	private Playlist favorites;
 	private final Map<String, Integer> playCount;
@@ -104,6 +107,12 @@ public class LibraryModel {
 		
 		// find playlist by provided name and print song details
 		public String searchForPlaylist(String playlistName) {
+			 if(playlistName.toLowerCase().equals("most played")) {
+	        	   return getMostFrequentlyPlayed().toString();
+	         }
+			 if(playlistName.toLowerCase().equals("recently played"))  { // special automatic 
+	        	   return new ArrayList<>(recentPlays).toString();
+	         }
 			Playlist playlist = playlists.get(playlistName);
 			return (playlist != null) ? playlist.toString() : "Playlist doesn't exist";
 		}
@@ -219,7 +228,17 @@ public class LibraryModel {
 	
 	public void rateSong(String name, int rating) {
 		ArrayList<Song> songs = this.songs.get(name);
-		songs.forEach(song -> song.rateSong(rating));
+		if (songs.size() > 1) {
+			System.out.println("Which artist?");
+			Scanner scanner = new Scanner(System.in);
+			String artist = scanner.nextLine();
+			for (Song song: songs) {
+				if (song.getArtist().equals(artist))
+					song.rateSong(rating);
+					return;
+			}
+		}
+		songs.get(0).rateSong(rating);
 	}
 	
 	
@@ -231,10 +250,9 @@ public class LibraryModel {
 		}
 	}
 	
-	
 	 public void playSong(String song) {
-	        System.out.println("Now playing: " + song);
 	        if (songs.get(song) != null) {
+	        	System.out.println("Now playing: " + song);
 	        	playCount.put(song, playCount.getOrDefault(song, 0) + 1);
 	        	recentPlays.remove(song);
 	        	recentPlays.addFirst(song);
@@ -244,6 +262,32 @@ public class LibraryModel {
 	        }
 	 }
 	 
+	 public List<String> getMostFrequentlyPlayed() {
+	        return playCount.entrySet().stream()
+	                .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
+	                .limit(MAX_TRACKED)
+	                .map(Map.Entry::getKey)
+	                .toList();
+	 }
+	 
+	 public void printSortedSongs(int selection) {
+		 switch (selection) {
+		 	// sort songs by rating
+		 	case 1: 
+		 		
+		 	// sort by artist alphabetical
+		 	case 2:
+		 		List<String> sortedArtists = ArtistAndSongs.keySet().stream().sorted().toList();
+		 		for (String artist : sortedArtists) {
+		 			System.out.println(getSongInfoByArtist(artist));
+		 		}
+		 		break;
+		 	// sort by song title alphabetical
+		 	case 3:
+		 		System.out.println(songs.keySet().stream().sorted().toList().toString());
+		 		break;
+		 }
+	 }
 	 
 	public void shuffleSongs() {
 		List<String> list = new ArrayList<String>(songs.keySet());
