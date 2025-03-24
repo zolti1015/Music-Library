@@ -1,11 +1,7 @@
 import java.io.IOException;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserAccount {
 	private final String username;
@@ -19,10 +15,9 @@ public class UserAccount {
 		this.password= password;
 		this.library = new LibraryModel();
 	}
-
+	
 	// TO DO: take user library and write all the date to a txt file
 	public void writeLibraryToFile() throws IOException {
-		// need to take a user's library and write the data to a user specific txt file 
 		
 		String fileName = this.username + "_Library.txt";
 		FileWriter writer = new FileWriter(fileName);
@@ -38,10 +33,7 @@ public class UserAccount {
 		try (BufferedReader reader = new BufferedReader(new FileReader(userFile))) {
 	            String line;
 	            while ((line = reader.readLine()) != null) {
-	                // populate user library as necessary based on how we write to the file
-	            	
-	            	
-	            	
+	                
 	            	
 	            }
 	        } catch (IOException e) {
@@ -60,8 +52,5 @@ public class UserAccount {
 	
 	public String getPassword() {
 		return password;
-	}
-	
-	
-	
+	}	
 }
