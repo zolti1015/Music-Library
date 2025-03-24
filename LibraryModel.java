@@ -3,6 +3,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,12 +18,13 @@ public class LibraryModel {
 	private Map<String, Playlist> playlists;
 	private Map<String, ArrayList<Album>> ArtistAndAlbums; // artist name, list of albums
 	private Map<String, ArrayList<Song>> ArtistAndSongs; // artist name, list of songs
+	private Map<String, ArrayList<Song>> GenreAndSongs; // genre, list of songs
+	// private Map<String, ArrayList<Song>> AlbumAndSongs; // artist name, list of songs
 	
-	private Map<String, ArrayList<Song>> AlbumAndSongs; // artist name, list of songs
-	
-	private Playlist favorites;
-	private final Map<String, Integer> playCount;
-	private final LinkedList<String> recentPlays; // automatic, user can query 
+	private final Playlist favorites;
+	private final Playlist topRated;
+	private final Map<String, Integer> playCount; // all plays, to then find most played
+	private final LinkedList<String> recentPlays; // 10 most recently played songs
 	
 	private static final int MAX_TRACKED = 10;
 	
@@ -39,7 +41,8 @@ public class LibraryModel {
 		this.ArtistAndAlbums = new HashMap<>();
 		this.ArtistAndSongs = new HashMap<>();
 		
-		favorites = new Playlist("Favorites");
+		favorites = new Playlist("favorites");
+		topRated = new Playlist("top rated");
 		playCount = new HashMap<>();
 		recentPlays = new LinkedList<>();
 	}
@@ -108,11 +111,25 @@ public class LibraryModel {
 		// find playlist by provided name and print song details
 		public String searchForPlaylist(String playlistName) {
 			 if(playlistName.toLowerCase().equals("most played")) {
-	        	   return getMostFrequentlyPlayed().toString();
+	        	 return getMostFrequentlyPlayed().toString();
 	         }
 			 if(playlistName.toLowerCase().equals("recently played"))  { // special automatic 
-	        	   return new ArrayList<>(recentPlays).toString();
+	        	 return new ArrayList<>(recentPlays).toString();
 	         }
+			 
+			 if (playlistName.toLowerCase().equals("favorites")) {
+				 return new ArrayList<>(favorites.getSongs()).toString();
+			 }
+			 
+			 if (playlistName.toLowerCase().equals("top rated")) {
+				 return new ArrayList<>(topRated.getSongs()).toString();
+			 }
+			 
+			 if (playlistName.toLowerCase().equals("at least 10 songs genres")) {
+				 return getGenrePlaylists();
+				 
+			 }
+			 
 			Playlist playlist = playlists.get(playlistName);
 			return (playlist != null) ? playlist.toString() : "Playlist doesn't exist";
 		}
@@ -125,8 +142,15 @@ public class LibraryModel {
 		        this.songs.get(songName).addAll(songList);  
 		        
 		        for (Song song : songList) {
+		        	// add to artist linked map
 		        	this.ArtistAndSongs.putIfAbsent(song.getArtist(), new ArrayList<>());
 		        	this.ArtistAndSongs.get(song.getArtist()).add(song); 
+		        	
+		        	// add to genre linked map
+		        	this.GenreAndSongs.putIfAbsent(song.getGenre(), new ArrayList<>());
+			        this.GenreAndSongs.get(song.getGenre()).add(song); 
+			        
+			        
 		        }
 		        
 			}
@@ -137,6 +161,10 @@ public class LibraryModel {
 			Album album = store.getAlbums().get(albumName);
 			if (album != null) {
 				albums.put(albumName, album);
+				album.getSongs().values().forEach(song -> {
+					this.songs.putIfAbsent(song.getArtist(), new ArrayList<>());
+		        	this.songs.get(song.getArtist()).add(song); // album added, so add all its songs to library
+				});
 				this.ArtistAndAlbums.putIfAbsent(album.getArtist(), new ArrayList<>());
 				this.ArtistAndAlbums.get(album.getArtist()).add(album); // assume no albums have same name
 				
@@ -185,13 +213,6 @@ public class LibraryModel {
 				case "playlists":
 					list = Arrays.toString(playlists.keySet().toArray());
 					break;
-				case "favorites":
-					for (ArrayList<Song> songs : songs.values()) {
-						for (Song song : songs ) {
-							if(song.getFavStatus()) list += song + "\n"; 
-						}
-					break;
-					}
 			}
 			list += "\n";
 			return list;
@@ -235,13 +256,25 @@ public class LibraryModel {
 			for (Song song: songs) {
 				if (song.getArtist().equals(artist))
 					song.rateSong(rating);
+					if (rating == 5) favorites.addSong(song);
+					if (rating == 4 || rating == 5) topRated.addSong(song);
 					return;
 			}
 		}
+		// if only one song with that name
 		songs.get(0).rateSong(rating);
+		if (rating == 4 || rating == 5) topRated.addSong(songs.get(0));
+		
+		
 	}
 	
+	public void removeSongFromLibrary(String name) {
+		songs.remove(name);
+	}
 	
+	public void removeAlbumFromLibrary(String albumName) {
+		albums.remove(albumName);
+	}
 	
 	public void getSongsByGenre(String genre) {
 		Collection<ArrayList<Song>> listsOfSongs = songs.values();
@@ -249,6 +282,20 @@ public class LibraryModel {
 			
 		}
 	}
+	
+	public String getGenrePlaylists() {
+		String list = "";
+		for (ArrayList<Song> songs : GenreAndSongs.values()) {
+			if (songs.size() >= 10) {
+				list += "Genre: " + songs.get(0).getGenre() + "\n";
+				for (Song song : songs) {
+					list += song.toString();
+				}
+			}
+		}
+		return list;
+}
+
 	
 	 public void playSong(String song) {
 	        if (songs.get(song) != null) {
@@ -272,9 +319,22 @@ public class LibraryModel {
 	 
 	 public void printSortedSongs(int selection) {
 		 switch (selection) {
+		 
 		 	// sort songs by rating
 		 	case 1: 
-		 		
+		 		List<Song> allSongs = new ArrayList<>();
+	            for (ArrayList<Song> songList : songs.values()) {
+	                allSongs.addAll(songList);
+	            }
+	            
+	            allSongs.sort((song1, song2) -> { 
+	            	// since rating is an enum, if it hasnt been rated yet we use zero else its position
+	            	Integer rating1 = (song1.getRating() != null) ? song1.getRating().ordinal() : 0;
+	            	Integer rating2 = (song2.getRating() != null) ? song2.getRating().ordinal() : 0;
+	            	return Integer.compare(rating1, rating2);
+	            });
+	            allSongs.forEach(song -> System.out.println(song.toString()));
+	            break;
 		 	// sort by artist alphabetical
 		 	case 2:
 		 		List<String> sortedArtists = ArtistAndSongs.keySet().stream().sorted().toList();
@@ -286,7 +346,13 @@ public class LibraryModel {
 		 	case 3:
 		 		System.out.println(songs.keySet().stream().sorted().toList().toString());
 		 		break;
+		 	default: 
+		 		System.out.println("Invalid selection. Try again."); 
 		 }
+	 }
+	 
+	 public void searchForSongByGenre(String genre) {
+		 GenreAndSongs.get(genre).forEach(song -> song.toString());
 	 }
 	 
 	public void shuffleSongs() {
@@ -294,4 +360,6 @@ public class LibraryModel {
 	    Collections.shuffle(list);
 	    list.forEach(songName->songs.put(songName, songs.get(songName)));
 	}
+	
+	
 }
