@@ -60,45 +60,6 @@ public class View {
         }
     }
     
-    private void handleSignIn() throws IOException, NoSuchAlgorithmException {
-    	System.out.println("1. LOGIN\n"
-    					 + "2. CREATE ACCOUNT");
-    	int choice = scanner.nextInt();
-    	scanner.nextLine();
-    	
-    	System.out.println("Username:");
-        String username = scanner.nextLine();
-        
-        System.out.println("Password:");
-        String password = scanner.nextLine();
-        
-    	switch (choice) {
-    		// logging in
-    		case 1:
-    			user = new UserAccount(username, password);
-    			if (!database.isLoginValid(user)) {
-    				System.out.println("Username or password incorrect!");
-    				handleSignIn(); // revert to login screen to try again
-    				return; 
-    			}
-    			// if reached, means log in was sucessful and wecan extract user's library
-    			this.model = database.getCreatedAccounts().get(username).getLibrary(); 
-    			this.user = database.getCreatedAccounts().get(username); // update the current user here
-    			System.out.println("Successfully signed in!");
-    			break;
-    		// creating new account
-    		case 2: 
-    			user = new UserAccount(username, password);
-    			System.out.println("Account successfully created!");
-    			database.writeNewAccountToDatabase(user);
-    			this.model = user.getLibrary();
-    			break;
-    		default: 
-    			System.out.println("Invalid input. Try again");
-    			handleSignIn();
-    			return; 
-    	}  
-    }
     
     private void displayMainMenu() {
         System.out.println("\nMAIN MENU");
@@ -166,6 +127,48 @@ public class View {
         
         System.out.println("0. Back to main menu");
     }
+    
+    private void handleSignIn() throws IOException, NoSuchAlgorithmException {
+    	System.out.println("1. LOGIN\n"
+    					 + "2. CREATE ACCOUNT");
+    	int choice = scanner.nextInt();
+    	scanner.nextLine();
+    	
+    	System.out.println("Username:");
+        String username = scanner.nextLine();
+        
+        System.out.println("Password:");
+        String password = scanner.nextLine();
+        
+    	switch (choice) {
+    		// logging in
+    		case 1:
+    			user = new UserAccount(username, password);
+    			if (!database.isLoginValid(user)) {
+    				System.out.println("Username or password incorrect!");
+    				handleSignIn(); // revert to login screen to try again
+    				return; 
+    			}
+    			// if reached, means log in was sucessful and we can extract user's library
+    			this.model = database.getCreatedAccounts().get(username).getLibrary(); 
+    			this.user = database.getCreatedAccounts().get(username); // update the current user here
+    			System.out.println("Successfully signed in!");
+    			break;
+    		// creating new account
+    		case 2: 
+    			user = new UserAccount(username, password);
+    			System.out.println("Account successfully created!");
+    			database.writeNewAccountToDatabase(user);
+    			this.model = user.getLibrary();
+    			break;
+    		default: 
+    			System.out.println("Invalid input. Try again");
+    			handleSignIn();
+    			return; 
+    	}  
+    }
+    
+    
 
     private void handleSearchMenu() {
     
