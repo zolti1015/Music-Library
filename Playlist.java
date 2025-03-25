@@ -36,11 +36,6 @@ public class Playlist {
 		songs.remove(song);
 	}
 	
-	// updates most played list based on the song's number of plays
-	public void handleFrequents(Song song) {
-		// for modifying list of most frequently played songs
-	}
-	
 	public void shufflePlaylist() {
 		ArrayList<Song> songs = new ArrayList<Song>(this.songs); // turn to list for shuffling
 		Collections.shuffle(songs);
