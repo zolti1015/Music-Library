@@ -42,15 +42,8 @@ public class Playlist {
 	}
 	
 	public void shufflePlaylist() {
-		
-		ArrayList<Song> songs = new ArrayList<Song>(this.songs);
-		System.out.println("Current order: \n");
-		songs.forEach(song -> song.toString());
-		
+		ArrayList<Song> songs = new ArrayList<Song>(this.songs); // turn to list for shuffling
 		Collections.shuffle(songs);
-		
-		System.out.println("New order: \n");
-		songs.forEach(song -> song.toString());
 		this.songs = new LinkedHashSet<Song>(songs);
 	}
 	
