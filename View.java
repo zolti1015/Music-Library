@@ -55,9 +55,11 @@ public class View {
     	System.out.println("1. LOGIN\n"
     					 + "2. CREATE ACCOUNT");
     	int choice = scanner.nextInt();
+    	scanner.nextLine();
     	
     	System.out.println("Username:");
         String username = scanner.nextLine();
+        
         System.out.println("Password:");
         String password = scanner.nextLine();
         
@@ -77,6 +79,7 @@ public class View {
     		case 2: 
     			user = new UserAccount(username, password);
     			System.out.println("Account successfully created!");
+    			usernameAndPasswordDatabase.writeNewAccountToDatabase(user);
     			this.model = user.getLibrary();
     			break;
     		default: 
@@ -89,10 +92,10 @@ public class View {
     private void displayMainMenu() {
         System.out.println("\nMAIN MENU");
         System.out.println("1. Search for music");
-        System.out.println("2. Add to library");
+        System.out.println("2. Add/remove to/from library");
         System.out.println("3. List library items");
         System.out.println("4. Manage playlists");
-        System.out.println("5. Song actions (favorite/rate/play)");
+        System.out.println("5. Song actions (favorite/rate/play/sort/shuffle)");
         System.out.println("0. SignOut");
     }
 
@@ -108,6 +111,8 @@ public class View {
         System.out.println("6. Search for song by artist in library");
         System.out.println("7. Search for album by title in library");
         System.out.println("8. Search for album by artist in library");
+        System.out.println("9 Search for song by genre in library");
+        
     }
     
     
@@ -115,6 +120,8 @@ public class View {
         System.out.println("\nADD MENU");
         System.out.println("1. Add song to library");
         System.out.println("2. Add album to library");
+        System.out.println("3. Remove song from library");
+        System.out.println("4. Remove album from library");
         System.out.println("0. Back to main menu");
     }
 
@@ -124,7 +131,6 @@ public class View {
         System.out.println("2. List all artists");
         System.out.println("3. List all albums");
         System.out.println("4. List all playlists");
-        System.out.println("5. List favorite songs");
         System.out.println("0. Back to main menu");
     }
 
@@ -134,6 +140,7 @@ public class View {
         System.out.println("2. Add song to playlist");
         System.out.println("3. Remove song from playlist");
         System.out.println("4. View playlist");
+        System.out.println("5. Shuffle playlist");
         System.out.println("0. Back to main menu");
     }
 
@@ -143,6 +150,8 @@ public class View {
         System.out.println("2. Rate song");
         System.out.println("3. Play song");
         System.out.println("4. Sort songs");
+        System.out.println("5. Shuffle songs");
+        
         System.out.println("0. Back to main menu");
     }
 
@@ -170,6 +179,7 @@ public class View {
                     	 if (model.getAlbums().get(model.getStore().getSongs().get(title).get(0).getAlbumOn()) != null) {
                     		 System.out.println("Album is in the library!");
                     	 }
+                    	 else  System.out.println("Album is not in the library!");
                      }
                      break;
                 case 2: 
@@ -207,6 +217,11 @@ public class View {
                     String artist4 = scanner.nextLine();
                     System.out.println(model.getAlbumInfoByArtist(artist4));
                     break;
+                case 9:
+                	System.out.println("Enter genre: ");
+                    String genre = scanner.nextLine();
+                    model.searchForSongByGenre(genre);
+                    break;
                 default: 
               	  	System.out.println("Invalid input"); 
             }
@@ -238,6 +253,16 @@ public class View {
                 String album = scanner.nextLine();
                 model.addAlbumToLibrary(album);
                 break;
+        	case 3:
+        		System.out.println("Enter song name: ");
+                String song2 = scanner.nextLine();
+                model.removeSongFromLibrary(song2);
+                break;
+        	case 4:
+        		System.out.println("Enter album name: ");
+                String album2 = scanner.nextLine();
+                model.removeAlbumFromLibrary(album2);
+                break;
         	default: 
            	  	System.out.println("Invalid input"); 
     }
@@ -264,8 +289,6 @@ public class View {
 			System.out.println(model.listOfItems("Albums")); break;
 	   case 4:
 			System.out.println(model.listOfItems("Playlists")); break;
-	   case 5:
-			System.out.println(model.listOfItems("Favorites")); break;
 	   default: 
      	  System.out.println("Invalid input"); 
    }
@@ -310,6 +333,11 @@ public class View {
         	    
        	   System.out.println(model.searchForPlaylist(playlist));
        	   break;
+	   case 5: 
+		   System.out.println("Name of playlist you want to shuffle?");
+           String toShuffle = scanner.nextLine();
+		   model.getPlaylists().get(toShuffle).shufflePlaylist();
+		   break;
 	   case 0:
 			return;
 	   default: 
@@ -347,10 +375,15 @@ public class View {
         	  System.out.println("Which song would you like to play?");
               String toPlay = scanner.nextLine();
               model.playSong(toPlay);
+              break;
           case 4:
         	  System.out.println("By: 1. rating \n 2. artist \n 3. title ");
         	  int type = scanner.nextInt();
         	  model.printSortedSongs(type);
+        	  break;
+          case 5: 
+        	  model.shuffleSongs();
+        	  break;
         	  
           default: 
         	  System.out.println("Invalid input"); 
