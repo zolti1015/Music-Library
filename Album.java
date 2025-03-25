@@ -1,9 +1,9 @@
-import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.Map;
 
 public class Album {
 
-	private ArrayList<Song> songs;
+	private Map<String, Song> songs;
 	private final String title;
 	private final String artist;
 	private final String genre;
@@ -14,15 +14,15 @@ public class Album {
 		this.artist = artist;
 		this.genre = genre;
 		this.year = year;
-		this.songs = new ArrayList<>();
+		this.songs = new HashMap<>();
 	}
 	
 	public void addSong (Song song) {
-		this.songs.add(song);
+		this.songs.put(song.getTitle(), song);
 	}
 	
-	public ArrayList<Song> getSongs() {
-		return new ArrayList<Song>(songs);
+	public HashMap<String, Song> getSongs() {
+		return new HashMap<String, Song>(songs);
 	}
 	
 	public String getTitle() {
@@ -43,14 +43,11 @@ public class Album {
 	
 	public String toString() {
 		String listOfSongs = "\nSongs on album: \n";
-		for (Song song : songs) {
+		for (Song song : songs.values()) {
 			listOfSongs += song.getTitle() + "\n";
 		}
-		return "Title: " + title +
-				"\nArtist: " + artist + 
-				"\nGenre: " + genre + 
-				"\nYear: " + year + 
-				listOfSongs;
+		return String.format("\nTitle: %s by %s from %s, %s Genre %s", title, artist, year, genre, listOfSongs);
+				
 	}
 	
 }

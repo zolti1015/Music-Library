@@ -1,13 +1,14 @@
+import java.util.LinkedHashSet;
 import java.util.ArrayList;
-
+import java.util.Collections;
 
 public class Playlist {
 
 	private String name;
-	private ArrayList<Song> playlist;
+	private LinkedHashSet<Song> songs;
 	
 	public Playlist(String name) {
-		this.playlist = new ArrayList<Song>();
+		this.songs = new LinkedHashSet<>(); // fast add/remove, keeps order
 		this.name = name;
 	}
 	
@@ -15,26 +16,38 @@ public class Playlist {
 		return name;
 	}
 	
-	public ArrayList<Song> getSongs() {
-		return new ArrayList<Song>(playlist);
+	public LinkedHashSet<Song> getSongs() {
+		return new LinkedHashSet<Song>(songs);
 	}
 	
-	
-	public void addSong(String name, String Artist) {
-		playlist.add(new Song(name, Artist));
+	public void addSong(Song song) {
+		songs.add(song);
 	}
 	
-	public void removeSong(String name) {
-		for (Song song : playlist) {
-			if(song.getTitle().equals(name)) playlist.remove(song);
+	// for ordered playlists, size caps at 10
+	public void addSongToFront(Song song) {
+		if (songs.size() == 10) {
+			songs.removeLast(); 
 		}
+		songs.addFirst(song);
 	}
+	
+	public void removeSong(Song song) {
+		songs.remove(song);
+	}
+	
+	public void shufflePlaylist() {
+		ArrayList<Song> songs = new ArrayList<Song>(this.songs); // turn to list for shuffling
+		Collections.shuffle(songs);
+		this.songs = new LinkedHashSet<Song>(songs);
+	}
+	
 	@Override
 	public String toString() {
-		String songs = "Songs: ";
-		for (Song song : playlist) {
-			songs += song.getTitle() + " by " + song.getArtist() + "\n";
+		String list = "Songs: ";
+		for (Song song : songs) {
+			list += song.getTitle() + " by " + song.getArtist() + "\n";
 		}
-		return songs;
+		return list;
 	}
 }
