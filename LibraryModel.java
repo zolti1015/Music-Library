@@ -206,7 +206,7 @@ public class LibraryModel {
 					list = Arrays.toString(songs.keySet().toArray());
 					break;
 				case "artists":
-					list = Arrays.toString(ArtistAndAlbums.keySet().toArray());
+					list = Arrays.toString(ArtistAndSongs.keySet().toArray());
 					break;
 				case "albums": 
 					list = Arrays.toString(albums.keySet().toArray());
