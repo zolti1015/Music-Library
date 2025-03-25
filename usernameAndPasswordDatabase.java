@@ -34,14 +34,15 @@ public class usernameAndPasswordDatabase {
 	public static void writeNewAccountToDatabase(UserAccount account) throws IOException, NoSuchAlgorithmException {
 		// use salt and hash
 		String file = "usersAndPass.txt";
-		FileWriter writer = new FileWriter(file);
+		FileWriter writer = new FileWriter(file, true); // true for adding to existing file
 		
 		String salt = createRandomSalt();
 		String saltedPass = account.getPassword() + salt;
 		String hashedPassword = hashPassword(saltedPass);
 		
 		// store username, hashed password, and salt value to a line
-		writer.write(account.getUsername() + " " + hashedPassword + salt + "\n");
+		writer.write(account.getUsername() + " " + hashedPassword + " " + salt + "\n");
+		writer.close();
 	}
 	
 	public static boolean isLoginValid(UserAccount account) throws NoSuchAlgorithmException, IOException {
