@@ -40,6 +40,7 @@ public class LibraryModel {
 		this.playlists = new HashMap<>();
 		this.ArtistAndAlbums = new HashMap<>();
 		this.ArtistAndSongs = new HashMap<>();
+		this.GenreAndSongs = new HashMap<>();
 		
 		favorites = new Playlist("favorites");
 		topRated = new Playlist("top rated");
@@ -125,7 +126,7 @@ public class LibraryModel {
 				 return new ArrayList<>(topRated.getSongs()).toString();
 			 }
 			 
-			 if (playlistName.toLowerCase().equals("at least 10 songs genres")) {
+			 if (playlistName.toLowerCase().equals("at least 10 songs genre")) {
 				 return getGenrePlaylists();
 				 
 			 }
@@ -162,8 +163,8 @@ public class LibraryModel {
 			if (album != null) {
 				albums.put(albumName, album);
 				album.getSongs().values().forEach(song -> {
-					this.songs.putIfAbsent(song.getArtist(), new ArrayList<>());
-		        	this.songs.get(song.getArtist()).add(song); // album added, so add all its songs to library
+					this.songs.putIfAbsent(song.getTitle(), new ArrayList<>());
+		        	this.songs.get(song.getTitle()).add(song); // album added, so add all its songs to library
 				});
 				this.ArtistAndAlbums.putIfAbsent(album.getArtist(), new ArrayList<>());
 				this.ArtistAndAlbums.get(album.getArtist()).add(album); // assume no albums have same name
@@ -264,6 +265,7 @@ public class LibraryModel {
 		// if only one song with that name
 		songs.get(0).rateSong(rating);
 		if (rating == 4 || rating == 5) topRated.addSong(songs.get(0));
+		if (rating == 5) favorites.addSong(songs.get(0));
 		
 		
 	}
@@ -307,6 +309,7 @@ public class LibraryModel {
 	        		recentPlays.removeLast();
 	        	}
 	        }
+	        else System.out.println("Song not in library!");
 	 }
 	 
 	 public List<String> getMostFrequentlyPlayed() {
@@ -352,13 +355,16 @@ public class LibraryModel {
 	 }
 	 
 	 public void searchForSongByGenre(String genre) {
-		 GenreAndSongs.get(genre).forEach(song -> song.toString());
+		 if (GenreAndSongs.get(genre) != null)
+			 GenreAndSongs.get(genre).forEach(song -> System.out.println(song.toString()));
 	 }
 	 
 	public void shuffleSongs() {
 		List<String> list = new ArrayList<String>(songs.keySet());
 	    Collections.shuffle(list);
-	    list.forEach(songName->songs.put(songName, songs.get(songName)));
+	    LinkedHashMap<String, ArrayList<Song>> shuffledMap = new LinkedHashMap<>();
+	    list.forEach(songName->shuffledMap.put(songName, songs.get(songName)));
+	    songs = shuffledMap; // new shuffled map is now the main one.
 	}
 	
 	
