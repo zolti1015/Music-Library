@@ -35,6 +35,7 @@ public class Song {
 			case 5: 
 				rating = Rating.FIVE;
 				favorite = true; // 5 star rating makes song automatic favorite
+				break;
 			default:
 	                throw new IllegalArgumentException("Invalid rating value.");
 		}
