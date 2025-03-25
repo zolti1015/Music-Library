@@ -55,7 +55,7 @@ public class MusicStore {
 			String songName;
 			while ((songName = albums.readLine()) != null) {
 				
-									// name,   Artist,         album song is on  genre
+									// name,   Artist,         album song is on     genre
 				Song song = new Song(songName, albumHeader[1], albumHeader[0], albumHeader[2]);
 				album.addSong(song);  // add the song to the album's collection of songs in the list
 				
@@ -149,6 +149,6 @@ public class MusicStore {
 	}
 	
 	public void getAlbumInfoForSong(String songName) {
-		songs.get(songName).forEach(song -> albums.get(song.getAlbumOn()).toString());
+		songs.get(songName).forEach(song -> System.out.println(albums.get(song.getAlbumOn()).toString()));
 	}
 }
