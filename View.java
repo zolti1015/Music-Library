@@ -6,12 +6,14 @@ import java.util.Scanner;
 public class View {
     
 	
-    private Scanner scanner;
+    private final Scanner scanner;
     private LibraryModel model;
     private UserAccount user;
-
+    private final usernameAndPasswordDatabase database;
+    
     public View() {
         this.scanner = new Scanner(System.in);
+        this.database = new usernameAndPasswordDatabase();
     }
 
 
@@ -27,10 +29,6 @@ public class View {
             int choice = scanner.nextInt();
             
             switch (choice) {
-                case 0: // sign out of account
-                    System.out.println("Exiting... Goodbye.");
-                    this.user.writeLibraryToFile(); // store user library info to unique txt file
-                    return;
                 case 1:
                     handleSearchMenu();
                     break;
@@ -47,7 +45,18 @@ public class View {
                 	// favorite and rate
                     handleSongActionsMenu();
                     break;
+                case 6: 
+                	// sign out of account
+                    System.out.println("Signing out... Goodbye.");
+                    run(); // re-run the view to handle new sign in
+                    return;
+                case 7: 
+                	// exit system
+                    System.out.println("Terminating program... Goodbye.");
+                    return;
+                
             }
+            
         }
     }
     
@@ -67,19 +76,21 @@ public class View {
     		// logging in
     		case 1:
     			user = new UserAccount(username, password);
-    			if (!usernameAndPasswordDatabase.isLoginValid(user)) {
+    			if (!database.isLoginValid(user)) {
     				System.out.println("Username or password incorrect!");
     				handleSignIn(); // revert to login screen to try again
     				return; 
     			}
-    			this.model = user.readLibraryFromFile(username); // else restore user data
+    			// if reached, means log in was sucessful and wecan extract user's library
+    			this.model = database.getCreatedAccounts().get(username).getLibrary(); 
+    			this.user = database.getCreatedAccounts().get(username); // update the current user here
     			System.out.println("Successfully signed in!");
     			break;
     		// creating new account
     		case 2: 
     			user = new UserAccount(username, password);
     			System.out.println("Account successfully created!");
-    			usernameAndPasswordDatabase.writeNewAccountToDatabase(user);
+    			database.writeNewAccountToDatabase(user);
     			this.model = user.getLibrary();
     			break;
     		default: 
@@ -96,7 +107,8 @@ public class View {
         System.out.println("3. List library items");
         System.out.println("4. Manage playlists");
         System.out.println("5. Song actions (favorite/rate/play/sort/shuffle)");
-        System.out.println("0. SignOut");
+        System.out.println("6. SignOut");
+        System.out.println("7. Terminate");
     }
 
     private void displaySearchMenu() {
