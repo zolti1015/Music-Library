@@ -3,11 +3,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -19,7 +17,7 @@ public class LibraryModel {
 	private Map<String, ArrayList<Album>> ArtistAndAlbums; // artist name, list of albums
 	private Map<String, ArrayList<Song>> ArtistAndSongs; // artist name, list of songs
 	private Map<String, ArrayList<Song>> GenreAndSongs; // genre, list of songs
-	// private Map<String, ArrayList<Song>> AlbumAndSongs; // artist name, list of songs
+	private Map<String, ArrayList<Song>> AlbumsAndSongs;
 	
 	private final Playlist favorites;
 	private final Playlist topRated;
@@ -41,6 +39,7 @@ public class LibraryModel {
 		this.ArtistAndAlbums = new HashMap<>();
 		this.ArtistAndSongs = new HashMap<>();
 		this.GenreAndSongs = new HashMap<>();
+		this.AlbumsAndSongs = new HashMap<>();
 		
 		favorites = new Playlist("favorites");
 		topRated = new Playlist("top rated");
@@ -149,7 +148,10 @@ public class LibraryModel {
 		        	
 		        	// add to genre linked map
 		        	this.GenreAndSongs.putIfAbsent(song.getGenre(), new ArrayList<>());
-			        this.GenreAndSongs.get(song.getGenre()).add(song); 
+			        this.GenreAndSongs.get(song.getGenre()).add(song);
+			        
+			        this.AlbumsAndSongs.putIfAbsent(song.getAlbumOn(), new ArrayList<>());
+			        this.AlbumsAndSongs.get(song.getAlbumOn()).add(song);
 			        
 			        
 		        }
@@ -159,19 +161,22 @@ public class LibraryModel {
 		}
 		
 		public void addAlbumToLibrary(String albumName) {
-			Album album = store.getAlbums().get(albumName);
-			if (album != null) {
-				albums.put(albumName, album);
-				album.getSongs().values().forEach(song -> {
-					this.songs.putIfAbsent(song.getTitle(), new ArrayList<>());
-		        	this.songs.get(song.getTitle()).add(song); // album added, so add all its songs to library
-				});
-				this.ArtistAndAlbums.putIfAbsent(album.getArtist(), new ArrayList<>());
-				this.ArtistAndAlbums.get(album.getArtist()).add(album); // assume no albums have same name
-				
-			}
-			else System.out.println("Album not in store!");
-		}
+            Album album = store.getAlbums().get(albumName);
+            if (album != null) {
+                albums.put(albumName, album);
+                album.getSongs().values().forEach(song -> {
+                    this.songs.putIfAbsent(song.getTitle(), new ArrayList<>());
+                    this.songs.get(song.getTitle()).add(song); // album added, so add all its songs to library
+
+                    this.GenreAndSongs.putIfAbsent(album.getGenre(), new ArrayList<>());
+                    this.GenreAndSongs.get(album.getGenre()).add(song); // assume no albums have same name
+                });
+                this.ArtistAndAlbums.putIfAbsent(album.getArtist(), new ArrayList<>());
+                this.ArtistAndAlbums.get(album.getArtist()).add(album); // assume no albums have same name
+
+            }
+            else System.out.println("Album not in store!");
+        }
 		
 		public HashMap<String, ArrayList<Song>> getSongs () {
 			return new HashMap<String, ArrayList<Song>>(songs); // copy list to avoid reference
@@ -210,6 +215,7 @@ public class LibraryModel {
 					break;
 				case "albums": 
 					list = Arrays.toString(albums.keySet().toArray());
+					list = list + Arrays.toString(AlbumsAndSongs.keySet().toArray());
 					break;
 				case "playlists":
 					list = Arrays.toString(playlists.keySet().toArray());
@@ -276,13 +282,6 @@ public class LibraryModel {
 	
 	public void removeAlbumFromLibrary(String albumName) {
 		albums.remove(albumName);
-	}
-	
-	public void getSongsByGenre(String genre) {
-		Collection<ArrayList<Song>> listsOfSongs = songs.values();
-		for (ArrayList<Song> songs : listsOfSongs) {
-			
-		}
 	}
 	
 	public String getGenrePlaylists() {
@@ -366,6 +365,4 @@ public class LibraryModel {
 	    list.forEach(songName->shuffledMap.put(songName, songs.get(songName)));
 	    songs = shuffledMap; // new shuffled map is now the main one.
 	}
-	
-	
 }
